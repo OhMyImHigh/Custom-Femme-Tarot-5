@@ -113,7 +113,6 @@
   <div class="deck-grid" id="grid"></div>
 
   <script>
-    // All 78 cards mapped to your specific file names
     const majorArcana = [
       "The Siren", "The Mirror Queen", "The Power Femme", "The Protector", 
       "The Old Spell", "The Lovers And Liars", "The Getaway", "The Soft Knife", 
@@ -125,11 +124,7 @@
 
     const wands = ["Ace Of Wands", "2 Of Wands", "3 Of Wands", "4 Of Wands", "5 Of Wands", "6 Of Wands", "7 Of Wands", "8 Of Wands", "9 Of Wands", "10 Of Wands", "Page Of Wands", "Knight Of Wands", "Queen Of Wands", "King Of Wands"];
     const cups = ["Ace Of Cups", "2 Of Cups", "3 Of Cups", "4 Of Cups", "5 Of Cups", "6 Of Cups", "7 Of Cups", "8 Of Cups", "9 Of Cups", "10 Of Cups", "Page Of Cups", "Knight Of Cups", "Queen Of Cups", "King Of Cups"];
-    
-    // Using your exact file spelling for Swords (Two, 8Of, Knnight)
     const swords = ["Ace Of Swords", "Two Of Swords", "Three Of Swords", "Four Of Swords", "Five Of Swords", "Six Of Swords", "Seven Of Swords", "8Of Swords", "Nine Of Swords", "Ten Of Swords", "Page Of Swords", "Knnight Of Swords", "Queen Of Swords", "King Of Swords"];
-    
-    // Using your exact file spelling for Pentacles (lowercase pentacles, Page of)
     const pentacles = ["Ace Of pentacles", "2 Of Pentacles", "3 Of Pentacles", "4 Of Pentacles", "5 Of Pentacles", "6 Of Pentacles", "7 Of Pentacles", "8 Of Pentacles", "9 Of Pentacles", "10 Of Pentacles", "Page of pentacles", "Knight Of Pentacles", "Queen Of Pentacles", "King Of Pentacles"];
 
     const fullDeck = [...majorArcana, ...wands, ...cups, ...swords, ...pentacles];
@@ -146,10 +141,28 @@
         <div class="card-inner">
           <div class="card-front"><p>Reveal</p></div>
           <div class="card-back">
-            <img src="${imgUrl}" alt="${name}" loading="lazy" 
-                 onerror="if(this.src.endsWith('.jpeg')) this.src=this.src.replace('.jpeg', '.jpg');">
+            <img src="${imgUrl}" alt="${name}" loading="lazy" class="tarot-img">
           </div>
         </div>`;
+      
+      const imgElement = container.querySelector('.tarot-img');
+      
+      // Attempting fallbacks if the initial .jpeg fails
+      imgElement.onerror = function() {
+        const currentSrc = this.src;
+        if (currentSrc.endsWith('.jpeg')) {
+          // Try .jpg next
+          this.src = currentSrc.replace('.jpeg', '.jpg');
+        } else if (currentSrc.endsWith('.jpg') && !currentSrc.includes('-')) {
+          // Try replacing spaces with dashes if standard naming fails
+          const parts = name.split(' ');
+          if (parts.length > 1) {
+            this.src = repoPath + encodeURIComponent(parts.join('-')) + '.jpeg';
+          }
+        } else if (currentSrc.includes('.jpeg') && currentSrc.includes('-')) {
+             this.src = currentSrc.replace('.jpeg', '.jpg');
+        }
+      };
       
       container.onclick = () => container.querySelector('.card-inner').classList.toggle('is-flipped');
       grid.appendChild(container);
