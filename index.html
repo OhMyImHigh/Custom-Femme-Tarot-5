@@ -86,7 +86,6 @@
       background-color: #000;
     }
 
-    /* Error state if image fails */
     .card-back.load-error {
       background-color: #300;
       font-size: 10px;
@@ -108,44 +107,50 @@
   <div class="deck-grid" id="grid"></div>
 
   <script>
-    // EXACT names from your GitHub screenshot (Screenshot 385.jpg)
+    // EXACT names from your GitHub repository based on the latest screenshot (388)
     const majorArcana = [
-      "The Fool (The Siren)", 
-      "The Magician (The Mirror Queen)", 
-      "The High Priestess (The Power Femme)", 
-      "The Empress (The Protector)", 
-      "The Emperor (The Old Spell)", 
-      "The Heirophant (The Lovers and Liars)", 
-      "The Chariot (The Getaway)", 
-      "Strength (The Soft Knife)", 
-      "The Hermit (The Night Watcher)", 
-      "Wheel Of Fortune (The Roulette)", 
-      "Justice (The Balance Act)", 
-      "The Hanged Man (The Hanging Heart)", 
-      "Death (The Burn)", 
-      "Temperance (The Alchemy)", 
-      "The Devil (The Addiction)", 
-      "The Tower (The Shatter)", 
-      "The Star (The Afterlight)", 
-      "The Moon (The Moonmilk)", 
-      "The Sun (The Glow Up)", 
-      "Judgement (The Wake-Up Call)", 
-      "The World (The Crowned Self)"
+      "The Siren", 
+      "The Magician", 
+      "The High Priestess", 
+      "The Empress", 
+      "The Emperor", 
+      "The Heirophant", 
+      "The Chariot", 
+      "Strength", 
+      "The Hermit", 
+      "Wheel Of Fortune", 
+      "Justice", 
+      "The Hanged Man", 
+      "Death", 
+      "Temperance", 
+      "The Devil", 
+      "The Tower", 
+      "The Star", 
+      "The Moon", 
+      "The Sun", 
+      "Judgement", 
+      "The World"
     ];
 
     const wands = ["Ace Of Wands", "2 Of Wands", "3 Of Wands", "4 Of Wands", "5 Of Wands", "6 Of Wands", "7 Of Wands", "8 Of Wands", "9 Of Wands", "10 Of Wands", "Page Of Wands", "Knight Of Wands", "Queen Of Wands", "King Of Wands"];
     const cups = ["Ace Of Cups", "2 Of Cups", "3 Of Cups", "4 Of Cups", "5 Of Cups", "6 Of Cups", "7 Of Cups", "8 Of Cups", "9 Of Cups", "10 Of Cups", "Page Of Cups", "Knight Of Cups", "Queen Of Cups", "King Of Cups"];
     
-    // Using digits and the specific '8Of' / 'Knnight' variants you have in your folder
-    const swords = ["Ace Of Swords", "Two Of Swords", "Three Of Swords", "Four Of Swords", "Five Of Swords", "Six Of Swords", "Seven Of Swords", "8Of Swords", "Nine Of Swords", "Ten Of Swords", "Page Of Swords", "Knnight Of Swords", "Queen Of Swords", "King Of Swords"];
+    const swords = [
+      "Ace Of Swords", "Two Of Swords", "Three Of Swords", "Four Of Swords", 
+      "Five Of Swords", "Six Of Swords", "Seven Of Swords", "8Of Swords", 
+      "Nine Of Swords", "Ten Of Swords", "Page Of Swords", "Knnight Of Swords", 
+      "Queen Of Swords", "King Of Swords"
+    ];
     
-    // Using your specific lowercase 'pentacles' for Ace/Page
-    const pentacles = ["Ace Of pentacles", "2 Of Pentacles", "3 Of Pentacles", "4 Of Pentacles", "5 Of Pentacles", "6 Of Pentacles", "7 Of Pentacles", "8 Of Pentacles", "9 Of Pentacles", "10 Of Pentacles", "Page of pentacles", "Knight Of Pentacles", "Queen Of Pentacles", "King Of Pentacles"];
+    const pentacles = [
+      "Ace Of pentacles", "2 Of Pentacles", "3 Of Pentacles", "4 Of Pentacles", 
+      "5 Of Pentacles", "6 Of Pentacles", "7 Of Pentacles", "8 Of Pentacles", 
+      "9 Of Pentacles", "10 Of Pentacles", "Page of pentacles", "Knight Of Pentacles", 
+      "Queen Of Pentacles", "King Of Pentacles"
+    ];
 
     const fullDeck = [...majorArcana, ...wands, ...cups, ...swords, ...pentacles];
     const grid = document.getElementById('grid');
-    
-    // The Direct path to your files
     const repoBase = "https://raw.githubusercontent.com/OhMyImHigh/Custom-Femme-Tarot-5/main/";
 
     fullDeck.forEach(name => {
@@ -166,20 +171,24 @@
       img.alt = name;
       img.loading = "lazy";
       
-      // Constructing the exact URL. GitHub needs spaces to be %20.
-      const fileName = name + ".jpeg";
-      img.src = repoBase + encodeURIComponent(fileName);
+      const tryLoad = (namePart, ext) => {
+        img.src = repoBase + encodeURIComponent(namePart) + ext;
+      };
 
-      // If .jpeg fails, try .jpg as a backup
       img.onerror = () => {
-        if (img.src.includes(".jpeg")) {
-            img.src = repoBase + encodeURIComponent(name + ".jpg");
+        const currentSrc = img.src;
+        if (currentSrc.includes(".jpeg")) {
+            tryLoad(name, ".jpg");
+        } else if (!currentSrc.includes("-") && name.includes(" ")) {
+            const dashedName = name.replace(/ /g, "-");
+            img.src = repoBase + encodeURIComponent(dashedName) + ".jpeg";
         } else {
-            // Final fail: show the user the name so we can fix the typo
             cardBack.classList.add('load-error');
-            cardBack.innerHTML = `<span>Error Loading:</span><br><strong>${name}</strong>`;
+            cardBack.innerHTML = `<span>Missing:</span><br><strong>${name}</strong>`;
         }
       };
+
+      tryLoad(name, ".jpeg");
 
       cardBack.appendChild(img);
       cardInner.appendChild(cardFront);
