@@ -113,14 +113,29 @@
   <div class="deck-grid" id="grid"></div>
 
   <script>
-    // Major Arcana
+    // Major Arcana - UPDATED based on your screenshot
     const majorArcana = [
-      "The Siren", "The Mirror Queen", "The Power Femme", "The Protector", 
-      "The Old Spell", "The Lovers And Liars", "The Getaway", "The Soft Knife", 
-      "The Night Watcher", "The Roulette", "The Balance Act", "The Hanging Heart", 
-      "The Burn", "The Alchemy", "The Addiction", "The Shatter", 
-      "The Afterlight", "The Moonmilk", "The Glow Up", "The Wake-Up Call", 
-      "The Crowned Self", "The Fool"
+      "The Fool (The Siren)", 
+      "The Magician (The Mirror Queen)", 
+      "The High Priestess (The Power Femme)", 
+      "The Empress (The Protector)", 
+      "The Emperor (The Old Spell)", 
+      "The Heirophant (The Lovers and Liars)", 
+      "The Chariot (The Getaway)", 
+      "Strength (The Soft Knife)", 
+      "The Hermit (The Night Watcher)", 
+      "Wheel of Fortune (The Roulette)", 
+      "Justice (The Balance Act)", 
+      "The Hanged Man (The Hanging Heart)", 
+      "Death (The Burn)", 
+      "Temperance (The Alchemy)", 
+      "The Devil (The Addiction)", 
+      "The Tower (The Shatter)", 
+      "The Star (The Afterlight)", 
+      "The Moon (The Moonmilk)", 
+      "The Sun (The Glow Up)", 
+      "Judgement (The Wake-Up Call)", 
+      "The World (The Crowned Self)"
     ];
 
     // Numbers used (Wands, Cups, Pentacles)
@@ -167,9 +182,18 @@
       img.alt = name;
       img.loading = "lazy";
       
-      // Since you confirmed they are .jpeg, we use that extension.
-      // encodeURIComponent is critical to handle the spaces correctly as %20 in the URL.
-      img.src = repoBase + encodeURIComponent(name) + ".jpeg";
+      // Attempting .jpeg since you confirmed that extension
+      const tryLoad = (ext) => {
+        img.src = repoBase + encodeURIComponent(name) + ext;
+      };
+
+      img.onerror = () => {
+        if (img.src.toLowerCase().endsWith('.jpeg')) {
+          tryLoad('.jpg'); // Fallback to .jpg just in case
+        }
+      };
+
+      tryLoad('.jpeg');
 
       cardBack.appendChild(img);
       cardInner.appendChild(cardFront);
