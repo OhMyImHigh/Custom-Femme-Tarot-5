@@ -5,16 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Femme Fatale Tarot</title>
   <style>
-    /* Reset & Deep Minimalist Theme */
     * { box-sizing: border-box; margin: 0; padding: 0; }
     
     body { 
       background-color: #050505; 
       color: #e0e0e0; 
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+      font-family: 'Segoe UI', system-ui, sans-serif; 
       text-align: center; 
       padding: 50px 15px;
-      overflow-x: hidden;
     }
 
     h1 { 
@@ -26,7 +24,6 @@
       color: #ffffff;
     }
 
-    /* Deck Layout */
     .deck-grid { 
       display: grid; 
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
@@ -36,7 +33,6 @@
       margin: 0 auto; 
     }
 
-    /* Card Structure */
     .card-container { 
       width: 220px; 
       height: 360px; 
@@ -58,7 +54,6 @@
       transform: rotateY(180deg); 
     }
 
-    /* Front and Back Styling */
     .card-front, .card-back { 
       backface-visibility: hidden; 
       position: absolute; 
@@ -67,12 +62,12 @@
       border-radius: 12px; 
       overflow: hidden; 
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       border: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* Dark Reveal Face */
     .card-front { 
       z-index: 2; 
       background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
@@ -85,11 +80,18 @@
       letter-spacing: 2px;
     }
 
-    /* Card Image Face */
     .card-back { 
       transform: rotateY(180deg); 
       z-index: 1; 
       background-color: #000;
+    }
+
+    /* Error state if image fails */
+    .card-back.load-error {
+      background-color: #300;
+      font-size: 10px;
+      padding: 10px;
+      color: #f66;
     }
 
     .card-back img { 
@@ -97,13 +99,6 @@
       height: 100%; 
       object-fit: cover; 
       display: block;
-    }
-
-    /* Mobile Adaptability */
-    @media (max-width: 500px) {
-      .card-container { width: 160px; height: 260px; }
-      h1 { font-size: 1.4rem; }
-      .deck-grid { gap: 20px; }
     }
   </style>
 </head>
@@ -113,7 +108,7 @@
   <div class="deck-grid" id="grid"></div>
 
   <script>
-    // Major Arcana - UPDATED based on your screenshot
+    // EXACT names from your GitHub screenshot (Screenshot 385.jpg)
     const majorArcana = [
       "The Fool (The Siren)", 
       "The Magician (The Mirror Queen)", 
@@ -124,7 +119,7 @@
       "The Chariot (The Getaway)", 
       "Strength (The Soft Knife)", 
       "The Hermit (The Night Watcher)", 
-      "Wheel of Fortune (The Roulette)", 
+      "Wheel Of Fortune (The Roulette)", 
       "Justice (The Balance Act)", 
       "The Hanged Man (The Hanging Heart)", 
       "Death (The Burn)", 
@@ -138,30 +133,19 @@
       "The World (The Crowned Self)"
     ];
 
-    // Numbers used (Wands, Cups, Pentacles)
     const wands = ["Ace Of Wands", "2 Of Wands", "3 Of Wands", "4 Of Wands", "5 Of Wands", "6 Of Wands", "7 Of Wands", "8 Of Wands", "9 Of Wands", "10 Of Wands", "Page Of Wands", "Knight Of Wands", "Queen Of Wands", "King Of Wands"];
     const cups = ["Ace Of Cups", "2 Of Cups", "3 Of Cups", "4 Of Cups", "5 Of Cups", "6 Of Cups", "7 Of Cups", "8 Of Cups", "9 Of Cups", "10 Of Cups", "Page Of Cups", "Knight Of Cups", "Queen Of Cups", "King Of Cups"];
     
-    // Swords: SPELLED OUT as requested
-    const swords = [
-      "Ace Of Swords", "Two Of Swords", "Three Of Swords", "Four Of Swords", 
-      "Five Of Swords", "Six Of Swords", "Seven Of Swords", "Eight Of Swords", 
-      "Nine Of Swords", "Ten Of Swords", "Page Of Swords", "Knight Of Swords", 
-      "Queen Of Swords", "King Of Swords"
-    ];
+    // Using digits and the specific '8Of' / 'Knnight' variants you have in your folder
+    const swords = ["Ace Of Swords", "Two Of Swords", "Three Of Swords", "Four Of Swords", "Five Of Swords", "Six Of Swords", "Seven Of Swords", "8Of Swords", "Nine Of Swords", "Ten Of Swords", "Page Of Swords", "Knnight Of Swords", "Queen Of Swords", "King Of Swords"];
     
-    // Pentacles: Numbers used (preserving lowercase 'pentacles' for Ace/Page)
-    const pentacles = [
-      "Ace Of pentacles", "2 Of Pentacles", "3 Of Pentacles", "4 Of Pentacles", 
-      "5 Of Pentacles", "6 Of Pentacles", "7 Of Pentacles", "8 Of Pentacles", 
-      "9 Of Pentacles", "10 Of Pentacles", "Page of pentacles", "Knight Of Pentacles", 
-      "Queen Of Pentacles", "King Of Pentacles"
-    ];
+    // Using your specific lowercase 'pentacles' for Ace/Page
+    const pentacles = ["Ace Of pentacles", "2 Of Pentacles", "3 Of Pentacles", "4 Of Pentacles", "5 Of Pentacles", "6 Of Pentacles", "7 Of Pentacles", "8 Of Pentacles", "9 Of Pentacles", "10 Of Pentacles", "Page of pentacles", "Knight Of Pentacles", "Queen Of Pentacles", "King Of Pentacles"];
 
     const fullDeck = [...majorArcana, ...wands, ...cups, ...swords, ...pentacles];
     const grid = document.getElementById('grid');
     
-    // GitHub Raw URL Base
+    // The Direct path to your files
     const repoBase = "https://raw.githubusercontent.com/OhMyImHigh/Custom-Femme-Tarot-5/main/";
 
     fullDeck.forEach(name => {
@@ -182,18 +166,20 @@
       img.alt = name;
       img.loading = "lazy";
       
-      // Attempting .jpeg since you confirmed that extension
-      const tryLoad = (ext) => {
-        img.src = repoBase + encodeURIComponent(name) + ext;
-      };
+      // Constructing the exact URL. GitHub needs spaces to be %20.
+      const fileName = name + ".jpeg";
+      img.src = repoBase + encodeURIComponent(fileName);
 
+      // If .jpeg fails, try .jpg as a backup
       img.onerror = () => {
-        if (img.src.toLowerCase().endsWith('.jpeg')) {
-          tryLoad('.jpg'); // Fallback to .jpg just in case
+        if (img.src.includes(".jpeg")) {
+            img.src = repoBase + encodeURIComponent(name + ".jpg");
+        } else {
+            // Final fail: show the user the name so we can fix the typo
+            cardBack.classList.add('load-error');
+            cardBack.innerHTML = `<span>Error Loading:</span><br><strong>${name}</strong>`;
         }
       };
-
-      tryLoad('.jpeg');
 
       cardBack.appendChild(img);
       cardInner.appendChild(cardFront);
