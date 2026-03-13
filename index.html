@@ -113,7 +113,7 @@
   <div class="deck-grid" id="grid"></div>
 
   <script>
-    // Major Arcana (Names as provided)
+    // Major Arcana
     const majorArcana = [
       "The Siren", "The Mirror Queen", "The Power Femme", "The Protector", 
       "The Old Spell", "The Lovers And Liars", "The Getaway", "The Soft Knife", 
@@ -123,51 +123,31 @@
       "The Crowned Self", "The Fool"
     ];
 
-    // Wands: Numbers used
+    // Numbers used (Wands, Cups, Pentacles)
     const wands = ["Ace Of Wands", "2 Of Wands", "3 Of Wands", "4 Of Wands", "5 Of Wands", "6 Of Wands", "7 Of Wands", "8 Of Wands", "9 Of Wands", "10 Of Wands", "Page Of Wands", "Knight Of Wands", "Queen Of Wands", "King Of Wands"];
-    
-    // Cups: Numbers used
     const cups = ["Ace Of Cups", "2 Of Cups", "3 Of Cups", "4 Of Cups", "5 Of Cups", "6 Of Cups", "7 Of Cups", "8 Of Cups", "9 Of Cups", "10 Of Cups", "Page Of Cups", "Knight Of Cups", "Queen Of Cups", "King Of Cups"];
     
     // Swords: SPELLED OUT as requested
     const swords = [
-      "Ace Of Swords", 
-      "Two Of Swords", 
-      "Three Of Swords", 
-      "Four Of Swords", 
-      "Five Of Swords", 
-      "Six Of Swords", 
-      "Seven Of Swords", 
-      "Eight Of Swords", 
-      "Nine Of Swords", 
-      "Ten Of Swords", 
-      "Page Of Swords", 
-      "Knight Of Swords", 
-      "Queen Of Swords", 
-      "King Of Swords"
+      "Ace Of Swords", "Two Of Swords", "Three Of Swords", "Four Of Swords", 
+      "Five Of Swords", "Six Of Swords", "Seven Of Swords", "Eight Of Swords", 
+      "Nine Of Swords", "Ten Of Swords", "Page Of Swords", "Knight Of Swords", 
+      "Queen Of Swords", "King Of Swords"
     ];
     
-    // Pentacles: Numbers used (preserving your lowercase 'pentacles' for the Ace/Page)
+    // Pentacles: Numbers used (preserving lowercase 'pentacles' for Ace/Page)
     const pentacles = [
-      "Ace Of pentacles", 
-      "2 Of Pentacles", 
-      "3 Of Pentacles", 
-      "4 Of Pentacles", 
-      "5 Of Pentacles", 
-      "6 Of Pentacles", 
-      "7 Of Pentacles", 
-      "8 Of Pentacles", 
-      "9 Of Pentacles", 
-      "10 Of Pentacles", 
-      "Page of pentacles", 
-      "Knight Of Pentacles", 
-      "Queen Of Pentacles", 
-      "King Of Pentacles"
+      "Ace Of pentacles", "2 Of Pentacles", "3 Of Pentacles", "4 Of Pentacles", 
+      "5 Of Pentacles", "6 Of Pentacles", "7 Of Pentacles", "8 Of Pentacles", 
+      "9 Of Pentacles", "10 Of Pentacles", "Page of pentacles", "Knight Of Pentacles", 
+      "Queen Of Pentacles", "King Of Pentacles"
     ];
 
     const fullDeck = [...majorArcana, ...wands, ...cups, ...swords, ...pentacles];
     const grid = document.getElementById('grid');
-    const repoPath = "https://raw.githubusercontent.com/OhMyImHigh/Custom-Femme-Tarot-5/main/";
+    
+    // GitHub Raw URL Base
+    const repoBase = "https://raw.githubusercontent.com/OhMyImHigh/Custom-Femme-Tarot-5/main/";
 
     fullDeck.forEach(name => {
       const container = document.createElement('div');
@@ -187,26 +167,9 @@
       img.alt = name;
       img.loading = "lazy";
       
-      // Smart Fallback Variations
-      const variations = [
-        name + ".jpeg",
-        name + ".jpg",
-        name.split(' ').join('%20') + ".jpeg",
-        name.split(' ').join('%20') + ".jpg"
-      ];
-      
-      let attemptIndex = 0;
-      
-      const tryNextSource = () => {
-        if (attemptIndex < variations.length) {
-          const fileName = variations[attemptIndex];
-          img.src = repoPath + fileName; 
-          attemptIndex++;
-        }
-      };
-
-      img.onerror = tryNextSource;
-      tryNextSource(); 
+      // Since you confirmed they are .jpeg, we use that extension.
+      // encodeURIComponent is critical to handle the spaces correctly as %20 in the URL.
+      img.src = repoBase + encodeURIComponent(name) + ".jpeg";
 
       cardBack.appendChild(img);
       cardInner.appendChild(cardFront);
