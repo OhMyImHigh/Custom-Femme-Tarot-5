@@ -5,44 +5,155 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Femme Fatale Tarot</title>
   <style>
-    body { background-color: #0a0a0a; color: #f0f0f0; font-family: sans-serif; text-align: center; padding: 50px; }
-    h1 { letter-spacing: 2px; text-transform: uppercase; margin-bottom: 40px; }
-    .deck-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; justify-items: center; max-width: 1200px; margin: 0 auto; }
-    .card-container { width: 250px; height: 400px; perspective: 1000px; }
-    .card-inner { width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; cursor: pointer; position: relative; }
-    .card-inner.is-flipped { transform: rotateY(180deg); -webkit-transform: rotateY(180deg); }
-    .card-front, .card-back { backface-visibility: hidden; -webkit-backface-visibility: hidden; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 10px; overflow: hidden; }
-    .card-front { z-index: 2; background-color: #1a1a1a; border: 1px solid #333; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-    .card-front p { color: #555; text-transform: uppercase; font-size: 0.8rem; pointer-events: none; }
-    .card-back { transform: rotateY(180deg); -webkit-transform: rotateY(180deg); z-index: 1; }
-    .card-back img { width: 100%; height: 100%; object-fit: cover; }
+    /* Reset & Deep Minimalist Theme */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body { 
+      background-color: #050505; 
+      color: #e0e0e0; 
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+      text-align: center; 
+      padding: 50px 15px;
+      overflow-x: hidden;
+    }
+
+    h1 { 
+      font-size: 2.2rem;
+      letter-spacing: 5px; 
+      text-transform: uppercase; 
+      margin-bottom: 60px; 
+      font-weight: 200;
+      color: #ffffff;
+    }
+
+    /* Deck Layout */
+    .deck-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+      gap: 35px; 
+      justify-items: center; 
+      max-width: 1400px; 
+      margin: 0 auto; 
+    }
+
+    /* Card Structure */
+    .card-container { 
+      width: 220px; 
+      height: 360px; 
+      perspective: 1200px; 
+      cursor: pointer;
+    }
+
+    .card-inner { 
+      width: 100%; 
+      height: 100%; 
+      transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); 
+      transform-style: preserve-3d; 
+      position: relative; 
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+
+    .card-inner.is-flipped { 
+      transform: rotateY(180deg); 
+    }
+
+    /* Front and Back Styling */
+    .card-front, .card-back { 
+      backface-visibility: hidden; 
+      position: absolute; 
+      top: 0; left: 0; 
+      width: 100%; height: 100%; 
+      border-radius: 12px; 
+      overflow: hidden; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Dark Reveal Face */
+    .card-front { 
+      z-index: 2; 
+      background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+    }
+
+    .card-front p { 
+      color: #555; 
+      text-transform: uppercase; 
+      font-size: 0.75rem; 
+      letter-spacing: 2px;
+    }
+
+    /* Card Image Face */
+    .card-back { 
+      transform: rotateY(180deg); 
+      z-index: 1; 
+      background-color: #000;
+    }
+
+    .card-back img { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: cover; 
+      display: block;
+    }
+
+    /* Mobile Adaptability */
+    @media (max-width: 500px) {
+      .card-container { width: 160px; height: 260px; }
+      h1 { font-size: 1.4rem; }
+      .deck-grid { gap: 20px; }
+    }
   </style>
 </head>
 <body>
-  <h1>The Femme Fatale Deck</h1>
-  <div class="deck-grid">
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Siren.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Mirror Queen.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Power Femme.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Protector.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Old Spell.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Lovers And Liars.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Getaway.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Soft Knife.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Night Watcher.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Roulette.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Balance Act.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Hanging Heart.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Burn.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Alchemy.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Addiction.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Shatter.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Afterlight.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Moonmilk.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Glow Up.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Wake-Up Call.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Crowned Self.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Fool.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="Ace Of Wands.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="2 Of Wands.jpeg"></div></div></div>
-    <div class="card-
+
+  <h1>Femme Fatale Tarot</h1>
+  <div class="deck-grid" id="grid"></div>
+
+  <script>
+    // All 78 cards mapped to your specific file names
+    const majorArcana = [
+      "The Siren", "The Mirror Queen", "The Power Femme", "The Protector", 
+      "The Old Spell", "The Lovers And Liars", "The Getaway", "The Soft Knife", 
+      "The Night Watcher", "The Roulette", "The Balance Act", "The Hanging Heart", 
+      "The Burn", "The Alchemy", "The Addiction", "The Shatter", 
+      "The Afterlight", "The Moonmilk", "The Glow Up", "The Wake-Up Call", 
+      "The Crowned Self", "The Fool"
+    ];
+
+    const wands = ["Ace Of Wands", "2 Of Wands", "3 Of Wands", "4 Of Wands", "5 Of Wands", "6 Of Wands", "7 Of Wands", "8 Of Wands", "9 Of Wands", "10 Of Wands", "Page Of Wands", "Knight Of Wands", "Queen Of Wands", "King Of Wands"];
+    const cups = ["Ace Of Cups", "2 Of Cups", "3 Of Cups", "4 Of Cups", "5 Of Cups", "6 Of Cups", "7 Of Cups", "8 Of Cups", "9 Of Cups", "10 Of Cups", "Page Of Cups", "Knight Of Cups", "Queen Of Cups", "King Of Cups"];
+    
+    // Using your exact file spelling for Swords (Two, 8Of, Knnight)
+    const swords = ["Ace Of Swords", "Two Of Swords", "Three Of Swords", "Four Of Swords", "Five Of Swords", "Six Of Swords", "Seven Of Swords", "8Of Swords", "Nine Of Swords", "Ten Of Swords", "Page Of Swords", "Knnight Of Swords", "Queen Of Swords", "King Of Swords"];
+    
+    // Using your exact file spelling for Pentacles (lowercase pentacles, Page of)
+    const pentacles = ["Ace Of pentacles", "2 Of Pentacles", "3 Of Pentacles", "4 Of Pentacles", "5 Of Pentacles", "6 Of Pentacles", "7 Of Pentacles", "8 Of Pentacles", "9 Of Pentacles", "10 Of Pentacles", "Page of pentacles", "Knight Of Pentacles", "Queen Of Pentacles", "King Of Pentacles"];
+
+    const fullDeck = [...majorArcana, ...wands, ...cups, ...swords, ...pentacles];
+    const grid = document.getElementById('grid');
+    const repoPath = "https://raw.githubusercontent.com/OhMyImHigh/Custom-Femme-Tarot-5/main/";
+
+    fullDeck.forEach(name => {
+      const container = document.createElement('div');
+      container.className = 'card-container';
+      
+      const imgUrl = `${repoPath}${encodeURIComponent(name)}.jpeg`;
+      
+      container.innerHTML = `
+        <div class="card-inner">
+          <div class="card-front"><p>Reveal</p></div>
+          <div class="card-back">
+            <img src="${imgUrl}" alt="${name}" loading="lazy" 
+                 onerror="if(this.src.endsWith('.jpeg')) this.src=this.src.replace('.jpeg', '.jpg');">
+          </div>
+        </div>`;
+      
+      container.onclick = () => container.querySelector('.card-inner').classList.toggle('is-flipped');
+      grid.appendChild(container);
+    });
+  </script>
+</body>
+</html>
