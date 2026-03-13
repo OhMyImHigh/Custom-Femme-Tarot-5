@@ -5,64 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Femme Fatale Tarot</title>
   <style>
-    body {
-      background-color: #0a0a0a;
-      color: #f0f0f0;
-      font-family: sans-serif;
-      text-align: center;
-      padding: 50px;
-    }
-    h1 {
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 40px;
-    }
-    .deck-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
-      justify-items: center;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .card-container {
-      width: 250px;
-      height: 400px; 
-      perspective: 1000px;
-    }
-    .card-inner {
-      width: 100%;
-      height: 100%;
-      transition: transform 0.6s;
-      transform-style: preserve-3d;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    }
-    .card-inner.is-flipped {
-      transform: rotateY(180deg);
-    }
-    .card-front, .card-back {
-      backface-visibility: hidden;
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .card-front {
-      background-color: #222; 
-      border: 1px solid #444; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center;
-    }
-    .card-front p { color: #666; }
-    .card-back {
-      transform: rotateY(180deg); 
-    }
-    .card-back img {
-      width: 100%; height: 100%; object-fit: cover;
-    }
+    body { background-color: #0a0a0a; color: #f0f0f0; font-family: sans-serif; text-align: center; padding: 50px; }
+    h1 { letter-spacing: 2px; text-transform: uppercase; margin-bottom: 40px; }
+    .deck-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; justify-items: center; max-width: 1200px; margin: 0 auto; }
+    .card-container { width: 250px; height: 400px; perspective: 1000px; }
+    .card-inner { width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; cursor: pointer; position: relative; }
+    .card-inner.is-flipped { transform: rotateY(180deg); -webkit-transform: rotateY(180deg); }
+    .card-front, .card-back { backface-visibility: hidden; -webkit-backface-visibility: hidden; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 10px; overflow: hidden; }
+    .card-front { z-index: 2; background-color: #1a1a1a; border: 1px solid #333; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+    .card-front p { color: #555; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+    .card-back { transform: rotateY(180deg); -webkit-transform: rotateY(180deg); z-index: 1; }
+    .card-back img { width: 100%; height: 100%; object-fit: cover; }
   </style>
 </head>
 <body>
@@ -70,38 +23,68 @@
   <h1>The Femme Fatale Deck</h1>
   <div class="deck-grid">
 
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Siren.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Mirror Queen.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Power Femme.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Protector.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Old Spell.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Lovers And Liars.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Getaway.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Soft Knife.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Night Watcher.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Roulette.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Balance Act.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Hanging Heart.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Burn.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Alchemy.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Addiction.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Shatter.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Afterlight.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Moonmilk.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Glow Up.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Wake-Up Call.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Crowned Self.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="The Fool.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Siren.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Mirror Queen.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Power Femme.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Protector.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Old Spell.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Lovers And Liars.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Getaway.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Soft Knife.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Night Watcher.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Roulette.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Balance Act.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Hanging Heart.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Burn.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Alchemy.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Addiction.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Shatter.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Afterlight.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Moonmilk.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Glow Up.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Wake-Up Call.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Crowned Self.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="The Fool.jpeg"></div></div></div>
 
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="Ace Of Wands.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="2 Of Wands.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="3 Of Wands.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="4 Of Wands.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="5 Of Wands.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="6 Of Wands.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="7 Of Wands.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="8 Of Wands.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="9 Of Wands.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="10 Of Wands.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div><div class="card-back"><img src="Page Of Wands.jpeg"></div></div></div>
-    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Click</p></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="Ace Of Wands.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="2 Of Wands.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="3 Of Wands.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="4 Of Wands.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="5 Of Wands.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="6 Of Wands.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="7 Of Wands.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="8 Of Wands.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="9 Of Wands.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="10 Of Wands.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="Page Of Wands.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="Knight Of Wands.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="Queen Of Wands.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="King Of Wands.jpeg"></div></div></div>
+
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="Ace Of Cups.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="2 Of Cups.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="3 Of Cups.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="4 Of Cups.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="5 Of Cups.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="6 Of Cups.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="7 Of Cups.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="8 Of Cups.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="9 Of Cups.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="10 Of Cups.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="Page Of Cups.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="Knight Of Cups.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="Queen Of Cups.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="King Of Cups.jpeg"></div></div></div>
+
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="Ace Of Swords.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="Two Of Swords.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="Three Of Swords.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="Four Of Swords.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="Five Of Swords.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="Six Of Swords.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="Seven Of Swords.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="8Of Swords.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="Nine Of Swords.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="Ten Of Swords.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>Reveal</p></div><div class="card-back"><img src="Page Of Swords.jpeg"></div></div></div>
+    <div class="card-container"><div class="card-inner"><div class="card-front"><p>
