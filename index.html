@@ -32,8 +32,47 @@
     .subtitle {
         font-style: italic;
         color: #888;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
         letter-spacing: 1px;
+    }
+
+    .api-key-box {
+        margin-bottom: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .api-key-box input {
+        width: 100%;
+        max-width: 400px;
+        background: rgba(10, 10, 10, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 10px 15px;
+        border-radius: 8px;
+        color: #999;
+        font-size: 0.9rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .api-key-box input:focus {
+        outline: none;
+        border-color: #555;
+        color: #fff;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .api-key-box a {
+        color: #666;
+        font-size: 0.75rem;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .api-key-box a:hover {
+        color: #aaa;
     }
 
     .controls-container {
@@ -385,6 +424,11 @@
   <h1>Femme Fatale Tarot</h1>
   <div class="subtitle">Ask the shadows, and they shall answer.</div>
   
+  <div class="api-key-box">
+      <input type="password" id="api-key-input" placeholder="Paste your Gemini API Key here to enable AI features..." autocomplete="off">
+      <a href="https://aistudio.google.com/app/apikey" target="_blank">Get a free API key from Google AI Studio</a>
+  </div>
+
   <div class="controls-container">
     <div class="intention-box">
         <input type="text" id="user-intention" placeholder="What seeks answers in the dark? (Enter your question...)" autocomplete="off">
@@ -420,8 +464,14 @@
   </div>
 
   <script>
-    const apiKey = ""; // Provided by execution environment
+    const apiKey = ""; // Provided by execution environment internally
     
+    // Helper function to pull the key from the UI if the internal environment is empty (like on GitHub)
+    function getActiveKey() {
+        const userInputKey = document.getElementById('api-key-input').value.trim();
+        return apiKey || userInputKey;
+    }
+
     // Arrays matching exact spellings, mapped with their folder names
     const majorArcana = [
       "The Fool", "The Siren", "The High Priestess", "The Empress", "Emperor", 
@@ -615,6 +665,8 @@
     }
 
     async function callGeminiText(promptText) {
+        const activeKey = getActiveKey();
+        
         const systemPrompt = `You are a mysterious, cynical, but wise 1940s noir femme fatale who reads tarot in a dimly lit, smoky speakeasy. You address the user using noir slang (kid, darling, sugar, pal). Focus on themes of ambition, secrets, danger, and allure.`;
         
         const payload = {
@@ -622,7 +674,7 @@
             systemInstruction: { parts: [{ text: systemPrompt }] }
         };
 
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${activeKey}`;
         
         const data = await fetchWithRetry(url, {
             method: "POST",
@@ -679,7 +731,15 @@
 
     // Gemini Text-to-Speech API Integration
     async function playTTS(text, buttonElement) {
-        if(!apiKey) { alert('API key missing in environment'); return; }
+        const activeKey = getActiveKey();
+        
+        if(!activeKey) { 
+            if(buttonElement) {
+                buttonElement.disabled = false;
+                buttonElement.textContent = '❌ API Key Required';
+            }
+            return; 
+        }
         
         if (buttonElement) {
             buttonElement.disabled = true;
@@ -689,7 +749,7 @@
         // Strip HTML tags so the voice reads cleanly
         const cleanText = text.replace(/<[^>]+>/g, '').trim();
 
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${activeKey}`;
         const payload = {
             contents: [{ parts: [{ text: "Speak in a sultry, mysterious, dramatic tone: " + cleanText }] }],
             generationConfig: {
@@ -740,6 +800,13 @@
 
     async function interpretCards() {
         if (currentSpread.length === 0) return;
+        
+        if (!getActiveKey()) {
+             readingBox.classList.add('active');
+             readingContent.innerHTML = `<p class="error-text">The shadows are silent. (Please paste a free Gemini API Key into the box at the top of the page to unlock the AI Tarot Reader!)</p>`;
+             readingBox.scrollIntoView({ behavior: 'smooth', block: 'end' });
+             return;
+        }
 
         // Auto-flip all cards for the user if they haven't yet
         document.querySelectorAll('.card-inner').forEach(card => card.classList.add('is-flipped'));
