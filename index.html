@@ -109,30 +109,30 @@
   <div class="deck-grid" id="grid"></div>
 
   <script>
-    // EXACT names from your GitHub repo based on your instructions
+    // Updated Major Arcana names with your specific mappings
     const majorArcana = [
-      "The Siren",            // 0
-      "The Mirror Queen",     // 1
-      "The High Priestess",   // 2
-      "The Power Femme",      // 3 (Empress)
-      "The Protector",        // 4
-      "The Old Spell",        // 5
-      "The Lovers and Liars", // 6
-      "The Getaway",          // 7
-      "The Soft Knife",       // 8
-      "The Night Watcher",    // 9
-      "The Roulette",         // 10
-      "The Balance Act",      // 11
-      "The Hanging Heart",    // 12
-      "The Burn",             // 13
-      "The Alchemy",          // 14
-      "The Addiction",        // 15
-      "The Shatter",          // 16
-      "The Afterlight",       // 17
-      "The Moonmilk",         // 18
-      "The Glow Up",          // 19
-      "The Wake-Up Call",     // 20
-      "The Crowned Self"      // 21
+      "The Siren",            
+      "The Mirror Queen",     
+      "The High Priestess",   
+      "The Power Femme",      
+      "Emperor",        
+      "The Old Spell",        
+      "The Lovers and Liars", 
+      "The Getaway",          
+      "The Soft Knife",       
+      "The Night Watcher",    
+      "The Roulette",         
+      "The Balance Act",      
+      "The Hanging Heart",    
+      "The Burn",             
+      "The Alchemy",          
+      "The Addiction",        
+      "The Shatter",          
+      "The Afterlight",       
+      "The Moonmilk",         
+      "The Glow Up",          
+      "The Wake-Up Call",     
+      "The Crowned Self"      
     ];
 
     const wands = ["Ace Of Wands", "2 Of Wands", "3 Of Wands", "4 Of Wands", "5 Of Wands", "6 Of Wands", "7 Of Wands", "8 Of Wands", "9 Of Wands", "10 Of Wands", "Page Of Wands", "Knight Of Wands", "Queen Of Wands", "King Of Wands"];
@@ -144,7 +144,7 @@
     const grid = document.getElementById('grid');
     const repoBase = "https://raw.githubusercontent.com/OhMyImHigh/Custom-Femme-Tarot-5/main/";
 
-    // THE BACK DESIGN
+    // THE BACK DESIGN FILE NAME
     const backDesignName = "Femme Fatale Design";
 
     fullDeck.forEach(name => {
@@ -160,12 +160,19 @@
       // LOAD YOUR CUSTOM BACK DESIGN
       const backImg = document.createElement('img');
       backImg.alt = "Card Back";
-      backImg.src = repoBase + encodeURIComponent(backDesignName) + ".jpeg";
-      backImg.onerror = () => {
-          if (backImg.src.includes(".jpeg")) {
-              backImg.src = repoBase + encodeURIComponent(backDesignName) + ".jpg";
-          }
+      
+      // Function to try loading the back design
+      const loadBack = (ext) => {
+        backImg.src = repoBase + encodeURIComponent(backDesignName) + ext;
       };
+
+      backImg.onerror = () => {
+        if (backImg.src.toLowerCase().endsWith('.jpeg')) {
+          loadBack(".jpg");
+        }
+      };
+
+      loadBack(".jpeg");
       cardFront.appendChild(backImg);
       
       const cardBack = document.createElement('div');
