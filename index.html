@@ -110,13 +110,13 @@
   <div class="deck-grid" id="grid"></div>
 
   <script>
-    // EXACT names matched to the strings in Screenshot (389) and (390)
+    // EXACT names matched to the strings in your repository screenshots
     const majorArcana = [
       "The Siren",            // 0
-      "The Wheel of Fortune", // 1 (Mapped to Magician position)
+      "Wheel of Fortune",     // 1 (Magician Position - No "The")
       "The High Priestess",   // 2
-      "The Power Femme",      // 3
-      "Emperor",              // 4
+      "The Power Femme",      // 3 (Empress Position)
+      "Emperor",              // 4 (No "The")
       "The Old Spell",        // 5
       "The Lovers and Liars", // 6
       "The Getaway",          // 7
@@ -139,7 +139,7 @@
     const wands = ["Ace Of Wands", "2 Of Wands", "3 Of Wands", "4 Of Wands", "5 Of Wands", "6 Of Wands", "7 Of Wands", "8 Of Wands", "9 Of Wands", "10 Of Wands", "Page Of Wands", "Knight Of Wands", "Queen Of Wands", "King Of Wands"];
     const cups = ["Ace Of Cups", "2 Of Cups", "3 Of Cups", "4 Of Cups", "5 Of Cups", "6 Of Cups", "7 Of Cups", "8 Of Cups", "9 Of Cups", "10 Of Cups", "Page Of Cups", "Knight Of Cups", "Queen Of Cups", "King Of Cups"];
     
-    // Explicitly using typos found in repo (8Of, Knnight)
+    // Typos preserved from repo: 8Of, Knnight
     const swords = [
       "Ace Of Swords", "Two Of Swords", "Three Of Swords", "Four Of Swords", 
       "Five Of Swords", "Six Of Swords", "Seven Of Swords", "8Of Swords", 
@@ -147,7 +147,7 @@
       "Queen Of Swords", "King Of Swords"
     ];
     
-    // Explicitly using lowercase "pentacles" where repo has it
+    // Case sensitivity preserved from repo: Page of pentacles, Ace Of pentacles
     const pentacles = [
       "Ace Of pentacles", "2 Of Pentacles", "3 Of Pentacles", "4 Of Pentacles", 
       "5 Of Pentacles", "6 Of Pentacles", "7 Of Pentacles", "8 Of Pentacles", 
@@ -159,7 +159,7 @@
     const grid = document.getElementById('grid');
     const repoBase = "https://raw.githubusercontent.com/OhMyImHigh/Custom-Femme-Tarot-5/main/";
 
-    // Updated to load your PNG back design
+    // THE BACK DESIGN (PNG)
     const backDesignName = "Femme Fatale Design";
 
     fullDeck.forEach(name => {
@@ -172,12 +172,11 @@
       const cardFront = document.createElement('div');
       cardFront.className = 'card-front';
       
-      // Attempting to load the .png back design
       const backImg = document.createElement('img');
       backImg.alt = "Card Back";
+      // Explicitly forcing the PNG path for the back design
       backImg.src = repoBase + encodeURIComponent(backDesignName) + ".png";
       
-      // Fallback for card back just in case
       backImg.onerror = function() {
           if (this.src.endsWith('.png')) this.src = repoBase + encodeURIComponent(backDesignName) + ".jpeg";
           else if (this.src.endsWith('.jpeg')) this.src = repoBase + encodeURIComponent(backDesignName) + ".jpg";
