@@ -22,7 +22,7 @@
       margin-bottom: 60px; 
       font-weight: 200;
       color: #ffffff;
-      text-shadow: 0 0 15px rgba(255,255,255,0.2);
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
     }
 
     .deck-grid { 
@@ -69,43 +69,19 @@
       border: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* Styled Card Back (The "Hidden" State) */
+    /* Card Back (The "Hidden" Design State) */
     .card-front { 
       z-index: 2; 
-      background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
-      border: 2px solid #2a2a2a;
-      position: relative;
+      background-color: #1a1a1a;
     }
 
-    /* Ornamental Border for Card Back */
-    .card-front::after {
-      content: '';
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      right: 10px;
-      bottom: 10px;
-      border: 1px solid rgba(212, 175, 55, 0.2); /* Faint Gold */
-      border-radius: 8px;
-      pointer-events: none;
+    .card-front img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    /* Center Icon Placeholder */
-    .card-front .symbol {
-      font-size: 2.5rem;
-      color: rgba(212, 175, 55, 0.4);
-      margin-bottom: 15px;
-      filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
-    }
-
-    .card-front p { 
-      color: #666; 
-      text-transform: uppercase; 
-      font-size: 0.75rem; 
-      letter-spacing: 3px;
-      font-weight: 300;
-    }
-
+    /* Card Face (The Reveal State) */
     .card-back { 
       transform: rotateY(180deg); 
       z-index: 1; 
@@ -133,12 +109,30 @@
   <div class="deck-grid" id="grid"></div>
 
   <script>
+    // EXACT names from your GitHub repo based on your instructions
     const majorArcana = [
-      "The Siren", "The Magician", "The High Priestess", "The Empress", 
-      "The Emperor", "The Heirophant", "The Chariot", "Strength", 
-      "The Hermit", "Wheel Of Fortune", "Justice", "The Hanged Man", 
-      "Death", "Temperance", "The Devil", "The Tower", "The Star", 
-      "The Moon", "The Sun", "Judgement", "The World"
+      "The Siren",            // 0
+      "The Mirror Queen",     // 1
+      "The High Priestess",   // 2
+      "The Power Femme",      // 3 (Empress)
+      "The Protector",        // 4
+      "The Old Spell",        // 5
+      "The Lovers and Liars", // 6
+      "The Getaway",          // 7
+      "The Soft Knife",       // 8
+      "The Night Watcher",    // 9
+      "The Roulette",         // 10
+      "The Balance Act",      // 11
+      "The Hanging Heart",    // 12
+      "The Burn",             // 13
+      "The Alchemy",          // 14
+      "The Addiction",        // 15
+      "The Shatter",          // 16
+      "The Afterlight",       // 17
+      "The Moonmilk",         // 18
+      "The Glow Up",          // 19
+      "The Wake-Up Call",     // 20
+      "The Crowned Self"      // 21
     ];
 
     const wands = ["Ace Of Wands", "2 Of Wands", "3 Of Wands", "4 Of Wands", "5 Of Wands", "6 Of Wands", "7 Of Wands", "8 Of Wands", "9 Of Wands", "10 Of Wands", "Page Of Wands", "Knight Of Wands", "Queen Of Wands", "King Of Wands"];
@@ -150,6 +144,9 @@
     const grid = document.getElementById('grid');
     const repoBase = "https://raw.githubusercontent.com/OhMyImHigh/Custom-Femme-Tarot-5/main/";
 
+    // THE BACK DESIGN
+    const backDesignName = "Femme Fatale Design";
+
     fullDeck.forEach(name => {
       const container = document.createElement('div');
       container.className = 'card-container';
@@ -159,39 +156,45 @@
       
       const cardFront = document.createElement('div');
       cardFront.className = 'card-front';
-      // Added a mystical symbol for the placeholder card back
-      cardFront.innerHTML = `
-        <div class="symbol">✧</div>
-        <p>Reveal</p>
-      `;
+      
+      // LOAD YOUR CUSTOM BACK DESIGN
+      const backImg = document.createElement('img');
+      backImg.alt = "Card Back";
+      backImg.src = repoBase + encodeURIComponent(backDesignName) + ".jpeg";
+      backImg.onerror = () => {
+          if (backImg.src.includes(".jpeg")) {
+              backImg.src = repoBase + encodeURIComponent(backDesignName) + ".jpg";
+          }
+      };
+      cardFront.appendChild(backImg);
       
       const cardBack = document.createElement('div');
       cardBack.className = 'card-back';
       
-      const img = document.createElement('img');
-      img.alt = name;
-      img.loading = "lazy";
+      const faceImg = document.createElement('img');
+      faceImg.alt = name;
+      faceImg.loading = "lazy";
       
-      const tryLoad = (namePart, ext) => {
-        img.src = repoBase + encodeURIComponent(namePart) + ext;
+      const tryLoadFace = (namePart, ext) => {
+        faceImg.src = repoBase + encodeURIComponent(namePart) + ext;
       };
 
-      img.onerror = () => {
-        const currentSrc = img.src;
+      faceImg.onerror = () => {
+        const currentSrc = faceImg.src;
         if (currentSrc.includes(".jpeg")) {
-            tryLoad(name, ".jpg");
+            tryLoadFace(name, ".jpg");
         } else if (!currentSrc.includes("-") && name.includes(" ")) {
             const dashedName = name.replace(/ /g, "-");
-            img.src = repoBase + encodeURIComponent(dashedName) + ".jpeg";
+            faceImg.src = repoBase + encodeURIComponent(dashedName) + ".jpeg";
         } else {
             cardBack.classList.add('load-error');
             cardBack.innerHTML = `<span>Missing:</span><br><strong>${name}</strong>`;
         }
       };
 
-      tryLoad(name, ".jpeg");
+      tryLoadFace(name, ".jpeg");
 
-      cardBack.appendChild(img);
+      cardBack.appendChild(faceImg);
       cardInner.appendChild(cardFront);
       cardInner.appendChild(cardBack);
       container.appendChild(cardInner);
