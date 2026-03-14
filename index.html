@@ -22,6 +22,7 @@
       margin-bottom: 60px; 
       font-weight: 200;
       color: #ffffff;
+      text-shadow: 0 0 15px rgba(255,255,255,0.2);
     }
 
     .deck-grid { 
@@ -68,16 +69,41 @@
       border: 1px solid rgba(255,255,255,0.1);
     }
 
+    /* Styled Card Back (The "Hidden" State) */
     .card-front { 
       z-index: 2; 
-      background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+      background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+      border: 2px solid #2a2a2a;
+      position: relative;
+    }
+
+    /* Ornamental Border for Card Back */
+    .card-front::after {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border: 1px solid rgba(212, 175, 55, 0.2); /* Faint Gold */
+      border-radius: 8px;
+      pointer-events: none;
+    }
+
+    /* Center Icon Placeholder */
+    .card-front .symbol {
+      font-size: 2.5rem;
+      color: rgba(212, 175, 55, 0.4);
+      margin-bottom: 15px;
+      filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
     }
 
     .card-front p { 
-      color: #555; 
+      color: #666; 
       text-transform: uppercase; 
       font-size: 0.75rem; 
-      letter-spacing: 2px;
+      letter-spacing: 3px;
+      font-weight: 300;
     }
 
     .card-back { 
@@ -89,7 +115,7 @@
     .card-back.load-error {
       background-color: #300;
       font-size: 10px;
-      padding: 10px;
+      padding: 20px;
       color: #f66;
     }
 
@@ -107,47 +133,18 @@
   <div class="deck-grid" id="grid"></div>
 
   <script>
-    // EXACT names from your GitHub repository based on the latest screenshot (388)
     const majorArcana = [
-      "The Siren", 
-      "The Magician", 
-      "The High Priestess", 
-      "The Empress", 
-      "The Emperor", 
-      "The Heirophant", 
-      "The Chariot", 
-      "Strength", 
-      "The Hermit", 
-      "Wheel Of Fortune", 
-      "Justice", 
-      "The Hanged Man", 
-      "Death", 
-      "Temperance", 
-      "The Devil", 
-      "The Tower", 
-      "The Star", 
-      "The Moon", 
-      "The Sun", 
-      "Judgement", 
-      "The World"
+      "The Siren", "The Magician", "The High Priestess", "The Empress", 
+      "The Emperor", "The Heirophant", "The Chariot", "Strength", 
+      "The Hermit", "Wheel Of Fortune", "Justice", "The Hanged Man", 
+      "Death", "Temperance", "The Devil", "The Tower", "The Star", 
+      "The Moon", "The Sun", "Judgement", "The World"
     ];
 
     const wands = ["Ace Of Wands", "2 Of Wands", "3 Of Wands", "4 Of Wands", "5 Of Wands", "6 Of Wands", "7 Of Wands", "8 Of Wands", "9 Of Wands", "10 Of Wands", "Page Of Wands", "Knight Of Wands", "Queen Of Wands", "King Of Wands"];
     const cups = ["Ace Of Cups", "2 Of Cups", "3 Of Cups", "4 Of Cups", "5 Of Cups", "6 Of Cups", "7 Of Cups", "8 Of Cups", "9 Of Cups", "10 Of Cups", "Page Of Cups", "Knight Of Cups", "Queen Of Cups", "King Of Cups"];
-    
-    const swords = [
-      "Ace Of Swords", "Two Of Swords", "Three Of Swords", "Four Of Swords", 
-      "Five Of Swords", "Six Of Swords", "Seven Of Swords", "8Of Swords", 
-      "Nine Of Swords", "Ten Of Swords", "Page Of Swords", "Knnight Of Swords", 
-      "Queen Of Swords", "King Of Swords"
-    ];
-    
-    const pentacles = [
-      "Ace Of pentacles", "2 Of Pentacles", "3 Of Pentacles", "4 Of Pentacles", 
-      "5 Of Pentacles", "6 Of Pentacles", "7 Of Pentacles", "8 Of Pentacles", 
-      "9 Of Pentacles", "10 Of Pentacles", "Page of pentacles", "Knight Of Pentacles", 
-      "Queen Of Pentacles", "King Of Pentacles"
-    ];
+    const swords = ["Ace Of Swords", "Two Of Swords", "Three Of Swords", "Four Of Swords", "Five Of Swords", "Six Of Swords", "Seven Of Swords", "8Of Swords", "Nine Of Swords", "Ten Of Swords", "Page Of Swords", "Knnight Of Swords", "Queen Of Swords", "King Of Swords"];
+    const pentacles = ["Ace Of pentacles", "2 Of Pentacles", "3 Of Pentacles", "4 Of Pentacles", "5 Of Pentacles", "6 Of Pentacles", "7 Of Pentacles", "8 Of Pentacles", "9 Of Pentacles", "10 Of Pentacles", "Page of pentacles", "Knight Of Pentacles", "Queen Of Pentacles", "King Of Pentacles"];
 
     const fullDeck = [...majorArcana, ...wands, ...cups, ...swords, ...pentacles];
     const grid = document.getElementById('grid');
@@ -162,7 +159,11 @@
       
       const cardFront = document.createElement('div');
       cardFront.className = 'card-front';
-      cardFront.innerHTML = '<p>Reveal</p>';
+      // Added a mystical symbol for the placeholder card back
+      cardFront.innerHTML = `
+        <div class="symbol">✧</div>
+        <p>Reveal</p>
+      `;
       
       const cardBack = document.createElement('div');
       cardBack.className = 'card-back';
