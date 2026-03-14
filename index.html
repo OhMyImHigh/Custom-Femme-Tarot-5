@@ -93,6 +93,7 @@
       font-size: 10px;
       padding: 20px;
       color: #f66;
+      text-align: center;
     }
 
     .card-back img { 
@@ -109,42 +110,56 @@
   <div class="deck-grid" id="grid"></div>
 
   <script>
-    // EXACT names based on repository screenshots and mappings
+    // EXACT names matched to the strings in Screenshot (389) and (390)
     const majorArcana = [
-      "The Siren",            
-      "The Wheel of Fortune", 
-      "The High Priestess",   
-      "The Power Femme",      
-      "Emperor",        
-      "The Old Spell",        
-      "The Lovers and Liars", 
-      "The Getaway",          
-      "The Soft Knife",       
-      "The Night Watcher",    
-      "The Roulette",         
-      "The Balance Act",      
-      "The Hanging Heart",    
-      "The Burn",             
-      "The Alchemy",          
-      "The Addiction",        
-      "The Shatter",          
-      "The Afterlight",       
-      "The Moonmilk",         
-      "The Glow Up",          
-      "The Wake-Up Call",     
-      "The Crowned Self"      
+      "The Siren",            // 0
+      "The Wheel of Fortune", // 1 (Mapped to Magician position)
+      "The High Priestess",   // 2
+      "The Power Femme",      // 3
+      "Emperor",              // 4
+      "The Old Spell",        // 5
+      "The Lovers and Liars", // 6
+      "The Getaway",          // 7
+      "The Soft Knife",       // 8
+      "The Night Watcher",    // 9
+      "The Roulette",         // 10
+      "The Balance Act",      // 11
+      "The Hanging Heart",    // 12
+      "The Burn",             // 13
+      "The Alchemy",          // 14
+      "The Addiction",        // 15
+      "The Shatter",          // 16
+      "Star",                 // 17
+      "Moon",                 // 18
+      "The Glow Up",          // 19
+      "The Wake-Up Call",     // 20
+      "The Crowned Self"      // 21
     ];
 
     const wands = ["Ace Of Wands", "2 Of Wands", "3 Of Wands", "4 Of Wands", "5 Of Wands", "6 Of Wands", "7 Of Wands", "8 Of Wands", "9 Of Wands", "10 Of Wands", "Page Of Wands", "Knight Of Wands", "Queen Of Wands", "King Of Wands"];
     const cups = ["Ace Of Cups", "2 Of Cups", "3 Of Cups", "4 Of Cups", "5 Of Cups", "6 Of Cups", "7 Of Cups", "8 Of Cups", "9 Of Cups", "10 Of Cups", "Page Of Cups", "Knight Of Cups", "Queen Of Cups", "King Of Cups"];
-    const swords = ["Ace Of Swords", "Two Of Swords", "Three Of Swords", "Four Of Swords", "Five Of Swords", "Six Of Swords", "Seven Of Swords", "8Of Swords", "Nine Of Swords", "Ten Of Swords", "Page Of Swords", "Knnight Of Swords", "Queen Of Swords", "King Of Swords"];
-    const pentacles = ["Ace Of pentacles", "2 Of Pentacles", "3 Of Pentacles", "4 Of Pentacles", "5 Of Pentacles", "6 Of Pentacles", "7 Of Pentacles", "8 Of Pentacles", "9 Of Pentacles", "10 Of Pentacles", "Page of pentacles", "Knight Of Pentacles", "Queen Of Pentacles", "King Of Pentacles"];
+    
+    // Explicitly using typos found in repo (8Of, Knnight)
+    const swords = [
+      "Ace Of Swords", "Two Of Swords", "Three Of Swords", "Four Of Swords", 
+      "Five Of Swords", "Six Of Swords", "Seven Of Swords", "8Of Swords", 
+      "Nine Of Swords", "Ten Of Swords", "Page Of Swords", "Knnight Of Swords", 
+      "Queen Of Swords", "King Of Swords"
+    ];
+    
+    // Explicitly using lowercase "pentacles" where repo has it
+    const pentacles = [
+      "Ace Of pentacles", "2 Of Pentacles", "3 Of Pentacles", "4 Of Pentacles", 
+      "5 Of Pentacles", "6 Of Pentacles", "7 Of Pentacles", "8 Of Pentacles", 
+      "9 Of Pentacles", "10 Of Pentacles", "Page of pentacles", "Knight Of Pentacles", 
+      "Queen Of Pentacles", "King Of Pentacles"
+    ];
 
     const fullDeck = [...majorArcana, ...wands, ...cups, ...swords, ...pentacles];
     const grid = document.getElementById('grid');
     const repoBase = "https://raw.githubusercontent.com/OhMyImHigh/Custom-Femme-Tarot-5/main/";
 
-    // THE BACK DESIGN FILE NAME (Confirmed as .png)
+    // Updated to load your PNG back design
     const backDesignName = "Femme Fatale Design";
 
     fullDeck.forEach(name => {
@@ -157,20 +172,15 @@
       const cardFront = document.createElement('div');
       cardFront.className = 'card-front';
       
-      // LOAD YOUR CUSTOM BACK DESIGN AS PNG
+      // Attempting to load the .png back design
       const backImg = document.createElement('img');
       backImg.alt = "Card Back";
-      
-      // Points directly to the .png file in the repo
       backImg.src = repoBase + encodeURIComponent(backDesignName) + ".png";
-
-      // If .png somehow fails, it will try common extensions
+      
+      // Fallback for card back just in case
       backImg.onerror = function() {
-          if (this.src.endsWith('.png')) {
-              this.src = repoBase + encodeURIComponent(backDesignName) + ".jpeg";
-          } else if (this.src.endsWith('.jpeg')) {
-              this.src = repoBase + encodeURIComponent(backDesignName) + ".jpg";
-          }
+          if (this.src.endsWith('.png')) this.src = repoBase + encodeURIComponent(backDesignName) + ".jpeg";
+          else if (this.src.endsWith('.jpeg')) this.src = repoBase + encodeURIComponent(backDesignName) + ".jpg";
       };
       
       cardFront.appendChild(backImg);
