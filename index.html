@@ -69,7 +69,7 @@
       border: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* Card Back (The "Hidden" Design State) */
+    /* Card Back (Face Down Design) */
     .card-front { 
       z-index: 2; 
       background-color: #1a1a1a;
@@ -81,7 +81,7 @@
       object-fit: cover;
     }
 
-    /* Card Face (The Reveal State) */
+    /* Card Face (Reveal Side) */
     .card-back { 
       transform: rotateY(180deg); 
       z-index: 1; 
@@ -110,44 +110,44 @@
   <div class="deck-grid" id="grid"></div>
 
   <script>
-    // EXACT names matched to the strings in your repository screenshots
+    // EXACT names matched to the strings in your repository screenshots (392-396)
     const majorArcana = [
-      "The Siren",            // 0
-      "Wheel of Fortune",     // 1 (Magician Position - No "The")
-      "The High Priestess",   // 2
-      "The Power Femme",      // 3 (Empress Position)
-      "Emperor",              // 4 (No "The")
-      "The Old Spell",        // 5
-      "The Lovers and Liars", // 6
-      "The Getaway",          // 7
-      "The Soft Knife",       // 8
-      "The Night Watcher",    // 9
-      "The Roulette",         // 10
-      "The Balance Act",      // 11
-      "The Hanging Heart",    // 12
-      "The Burn",             // 13
-      "The Alchemy",          // 14
-      "The Addiction",        // 15
-      "The Shatter",          // 16
-      "Star",                 // 17
-      "Moon",                 // 18
-      "The Glow Up",          // 19
-      "The Wake-Up Call",     // 20
-      "The Crowned Self"      // 21
+      "The Fool",             // 0 (The Fool)
+      "The Siren",            // 1 (The Magician)
+      "The High Priestess",   // 2 (The High Priestess)
+      "The Empress",          // 3 (The Empress)
+      "Emperor",              // 4 (The Emperor)
+      "The Old Spell",        // 5 (The Hierophant)
+      "The Lovers and Liars", // 6 (The Lovers)
+      "The Getaway",          // 7 (The Chariot)
+      "The Soft Knife",       // 8 (Strength/Justice depending on deck)
+      "The Night Watcher",    // 9 (The Hermit)
+      "The Roulette",         // 10 (Wheel of Fortune)
+      "The Balance Act",      // 11 (Justice/Strength)
+      "The Hanging Heart",    // 12 (The Hanged Man)
+      "The Burn",             // 13 (Death)
+      "The Alchemy",          // 14 (Temperance)
+      "The Addiction",        // 15 (The Devil)
+      "The Shatter",          // 16 (The Tower)
+      "Star",                 // 17 (The Star)
+      "Moon",                 // 18 (The Moon)
+      "The Glow Up",          // 19 (The Sun)
+      "The Wake-Up Call",     // 20 (Judgement)
+      "The Crowned Self"      // 21 (The World - Final Card)
     ];
 
     const wands = ["Ace Of Wands", "2 Of Wands", "3 Of Wands", "4 Of Wands", "5 Of Wands", "6 Of Wands", "7 Of Wands", "8 Of Wands", "9 Of Wands", "10 Of Wands", "Page Of Wands", "Knight Of Wands", "Queen Of Wands", "King Of Wands"];
     const cups = ["Ace Of Cups", "2 Of Cups", "3 Of Cups", "4 Of Cups", "5 Of Cups", "6 Of Cups", "7 Of Cups", "8 Of Cups", "9 Of Cups", "10 Of Cups", "Page Of Cups", "Knight Of Cups", "Queen Of Cups", "King Of Cups"];
     
-    // Typos preserved from repo: 8Of, Knnight
+    // Exact spelling from repo
     const swords = [
       "Ace Of Swords", "Two Of Swords", "Three Of Swords", "Four Of Swords", 
       "Five Of Swords", "Six Of Swords", "Seven Of Swords", "8Of Swords", 
-      "Nine Of Swords", "Ten Of Swords", "Page Of Swords", "Knnight Of Swords", 
+      "Nine Of Swords", "Ten Of Swords", "Page Of Swords", "Knight Of Swords", 
       "Queen Of Swords", "King Of Swords"
     ];
     
-    // Case sensitivity preserved from repo: Page of pentacles, Ace Of pentacles
+    // Exact casing from repo (pentacles lowercase)
     const pentacles = [
       "Ace Of pentacles", "2 Of Pentacles", "3 Of Pentacles", "4 Of Pentacles", 
       "5 Of Pentacles", "6 Of Pentacles", "7 Of Pentacles", "8 Of Pentacles", 
@@ -159,7 +159,7 @@
     const grid = document.getElementById('grid');
     const repoBase = "https://raw.githubusercontent.com/OhMyImHigh/Custom-Femme-Tarot-5/main/";
 
-    // THE BACK DESIGN (PNG)
+    // Forced PNG for the design back
     const backDesignName = "Femme Fatale Design";
 
     fullDeck.forEach(name => {
@@ -174,14 +174,17 @@
       
       const backImg = document.createElement('img');
       backImg.alt = "Card Back";
-      // Explicitly forcing the PNG path for the back design
-      backImg.src = repoBase + encodeURIComponent(backDesignName) + ".png";
       
+      const loadBack = (ext) => {
+        backImg.src = repoBase + encodeURIComponent(backDesignName) + ext;
+      };
+
       backImg.onerror = function() {
-          if (this.src.endsWith('.png')) this.src = repoBase + encodeURIComponent(backDesignName) + ".jpeg";
-          else if (this.src.endsWith('.jpeg')) this.src = repoBase + encodeURIComponent(backDesignName) + ".jpg";
+          if (this.src.endsWith('.png')) loadBack(".jpeg");
+          else if (this.src.endsWith('.jpeg')) loadBack(".jpg");
       };
       
+      loadBack(".png");
       cardFront.appendChild(backImg);
       
       const cardBack = document.createElement('div');
