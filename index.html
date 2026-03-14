@@ -109,10 +109,10 @@
   <div class="deck-grid" id="grid"></div>
 
   <script>
-    // Updated Major Arcana names with your specific mappings
+    // EXACT names based on repository screenshots and mappings
     const majorArcana = [
       "The Siren",            
-      "The Mirror Queen",     
+      "The Wheel of Fortune", 
       "The High Priestess",   
       "The Power Femme",      
       "Emperor",        
@@ -144,7 +144,7 @@
     const grid = document.getElementById('grid');
     const repoBase = "https://raw.githubusercontent.com/OhMyImHigh/Custom-Femme-Tarot-5/main/";
 
-    // THE BACK DESIGN FILE NAME
+    // THE BACK DESIGN FILE NAME (Confirmed as .png)
     const backDesignName = "Femme Fatale Design";
 
     fullDeck.forEach(name => {
@@ -157,22 +157,22 @@
       const cardFront = document.createElement('div');
       cardFront.className = 'card-front';
       
-      // LOAD YOUR CUSTOM BACK DESIGN
+      // LOAD YOUR CUSTOM BACK DESIGN AS PNG
       const backImg = document.createElement('img');
       backImg.alt = "Card Back";
       
-      // Function to try loading the back design
-      const loadBack = (ext) => {
-        backImg.src = repoBase + encodeURIComponent(backDesignName) + ext;
-      };
+      // Points directly to the .png file in the repo
+      backImg.src = repoBase + encodeURIComponent(backDesignName) + ".png";
 
-      backImg.onerror = () => {
-        if (backImg.src.toLowerCase().endsWith('.jpeg')) {
-          loadBack(".jpg");
-        }
+      // If .png somehow fails, it will try common extensions
+      backImg.onerror = function() {
+          if (this.src.endsWith('.png')) {
+              this.src = repoBase + encodeURIComponent(backDesignName) + ".jpeg";
+          } else if (this.src.endsWith('.jpeg')) {
+              this.src = repoBase + encodeURIComponent(backDesignName) + ".jpg";
+          }
       };
-
-      loadBack(".jpeg");
+      
       cardFront.appendChild(backImg);
       
       const cardBack = document.createElement('div');
