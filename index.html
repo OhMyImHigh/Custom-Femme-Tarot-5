@@ -1,958 +1,409 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Femme Fatale Tarot</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    body { 
-      background-color: #050505; 
-      color: #e0e0e0; 
-      font-family: 'Segoe UI', system-ui, sans-serif; 
-      text-align: center; 
-      padding: 50px 15px;
-      overflow-x: hidden;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    h1 { 
-      font-size: 2.5rem;
-      letter-spacing: 5px; 
-      text-transform: uppercase; 
-      margin-bottom: 10px; 
-      font-weight: 200;
-      color: #ffffff;
-      text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-    }
-    
-    .subtitle {
-        font-style: italic;
-        color: #888;
-        margin-bottom: 20px;
-        letter-spacing: 1px;
-    }
-
-    .api-key-box {
-        margin-bottom: 30px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .api-key-box input {
-        width: 100%;
-        max-width: 400px;
-        background: rgba(10, 10, 10, 0.8);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 10px 15px;
-        border-radius: 8px;
-        color: #999;
-        font-size: 0.9rem;
-        text-align: center;
-        transition: all 0.3s ease;
-    }
-
-    .api-key-box input:focus {
-        outline: none;
-        border-color: #555;
-        color: #fff;
-        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-    }
-
-    .api-key-box a {
-        color: #666;
-        font-size: 0.75rem;
-        text-decoration: none;
-        transition: color 0.3s ease;
-    }
-
-    .api-key-box a:hover {
-        color: #aaa;
-    }
-
-    .controls-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-        margin-bottom: 50px;
-    }
-
-    .intention-box {
-        width: 100%;
-        max-width: 600px;
-        position: relative;
-    }
-
-    .intention-box input {
-        width: 100%;
-        background: rgba(20, 20, 20, 0.8);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        padding: 15px 20px;
-        border-radius: 8px;
-        color: #fff;
-        font-size: 1.1rem;
-        font-family: 'Georgia', serif;
-        font-style: italic;
-        transition: all 0.3s ease;
-        box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
-    }
-
-    .intention-box input:focus {
-        outline: none;
-        border-color: #900;
-        box-shadow: 0 0 15px rgba(153, 0, 0, 0.3), inset 0 2px 5px rgba(0,0,0,0.5);
-    }
-
-    .controls {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-
-    button {
-      background: transparent;
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      padding: 10px 25px;
-      font-size: 1rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      cursor: pointer;
-      border-radius: 30px;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(5px);
-    }
-
-    button:hover:not(:disabled) {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: #fff;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-    }
-
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    
-    #btn-interpret {
-      display: none;
-      border-color: #900;
-      color: #fcc;
-      font-weight: bold;
-    }
-    
-    #btn-interpret:hover:not(:disabled) {
-      background: rgba(153, 0, 0, 0.2);
-      border-color: #f00;
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
-    }
-
-    .deck-grid { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
-      gap: 35px; 
-      justify-items: center; 
-      max-width: 1400px; 
-      margin: 0 auto; 
-      transition: all 0.5s ease;
-    }
-
-    /* Layout for reading modes */
-    .deck-grid.reading-mode {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 50px;
-    }
-
-    .card-container { 
-      width: 220px; 
-      height: 360px; 
-      perspective: 1200px; 
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .card-container:hover {
-      transform: translateY(-10px);
-    }
-
-    .card-inner { 
-      width: 100%; 
-      height: 100%; 
-      transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); 
-      transform-style: preserve-3d; 
-      position: relative; 
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-    }
-
-    .card-container:hover .card-inner {
-      box-shadow: 0 15px 40px rgba(255, 255, 255, 0.15);
-    }
-
-    .card-inner.is-flipped { 
-      transform: rotateY(180deg); 
-    }
-
-    .card-front, .card-back { 
-      backface-visibility: hidden; 
-      position: absolute; 
-      top: 0; left: 0; 
-      width: 100%; height: 100%; 
-      border-radius: 12px; 
-      overflow: hidden; 
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .card-front { 
-      z-index: 2; 
-      background-color: #1a1a1a;
-    }
-
-    .card-front img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .card-back { 
-      transform: rotateY(180deg); 
-      z-index: 1; 
-      background-color: #000;
-    }
-
-    .card-back.load-error {
-      background-color: #300;
-      font-size: 14px;
-      padding: 20px;
-      color: #f66;
-      text-align: center;
-    }
-
-    .card-back img { 
-      width: 100%; 
-      height: 100%; 
-      object-fit: cover; 
-      display: block;
-    }
-
-    .spread-label {
-      transform: rotateY(180deg);
-      position: absolute;
-      bottom: -35px;
-      width: 100%;
-      text-align: center;
-      font-size: 0.9rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: #888;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .is-flipped .spread-label {
-      opacity: 1;
-    }
-
-    /* Interpretation Reading UI */
-    .reading-box {
-      max-width: 800px;
-      margin: 60px auto 20px auto;
-      padding: 30px;
-      background: linear-gradient(135deg, rgba(20, 0, 0, 0.8), rgba(10, 0, 0, 0.9));
-      border: 1px solid rgba(150, 0, 0, 0.3);
-      border-radius: 8px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
-      color: #ddd;
-      text-align: left;
-      font-family: 'Georgia', serif;
-      font-size: 1.15rem;
-      line-height: 1.8;
-      display: none;
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
-    }
-
-    .reading-box.active {
-      display: block;
-      opacity: 1;
-    }
-
-    .reading-box p {
-      margin-bottom: 20px;
-    }
-    
-    .reading-box p:last-child {
-      margin-bottom: 0;
-    }
-
-    .reading-actions {
-        margin-top: 25px;
-        padding-top: 20px;
-        border-top: 1px solid rgba(255,255,255,0.1);
-        text-align: center;
-        display: none;
-    }
-
-    #btn-listen {
-        border-color: #900;
-        background: rgba(150, 0, 0, 0.1);
-    }
-    #btn-listen:hover:not(:disabled) {
-        background: rgba(150, 0, 0, 0.3);
-        box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
-    }
-
-    /* Dialogue & Followup UI */
-    .dialogue-section {
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 1px solid rgba(255,255,255,0.1);
-        display: none;
-    }
-
-    .dialogue-section.active {
-        display: block;
-    }
-
-    .chat-history {
-        margin-bottom: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .chat-bubble {
-        padding: 12px 18px;
-        border-radius: 8px;
-        max-width: 85%;
-        font-size: 1rem;
-        position: relative;
-    }
-
-    .chat-user {
-        align-self: flex-end;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255,255,255,0.2);
-        color: #fff;
-    }
-
-    .chat-reader {
-        align-self: flex-start;
-        background: rgba(150, 0, 0, 0.15);
-        border: 1px solid rgba(150, 0, 0, 0.3);
-        color: #fcc;
-        font-style: italic;
-    }
-
-    .mini-listen-btn {
-        background: none;
-        border: 1px solid rgba(255,255,255,0.3);
-        color: #fff;
-        border-radius: 50%;
-        width: 30px;
-        height: 30px;
-        font-size: 0.8rem;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        padding: 0;
-        margin-left: 10px;
-        vertical-align: middle;
-    }
-
-    .followup-controls {
-        display: flex;
-        gap: 10px;
-    }
-
-    .followup-controls input {
-        flex: 1;
-        background: rgba(0, 0, 0, 0.5);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        padding: 10px 15px;
-        border-radius: 4px;
-        color: #fff;
-        font-family: 'Segoe UI', sans-serif;
-    }
-
-    .followup-controls input:focus {
-        outline: none;
-        border-color: #900;
-    }
-
-    .followup-controls button {
-        border-radius: 4px;
-        font-size: 0.9rem;
-        padding: 10px 20px;
-    }
-
-    .loading-text {
-      font-style: italic;
-      color: #888;
-      text-align: center;
-      animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-      0% { opacity: 0.5; }
-      50% { opacity: 1; }
-      100% { opacity: 0.5; }
-    }
-    
-    .error-text {
-        color: #f66;
-        text-align: center;
-    }
-  </style>
-</head>
-<body>
-
-  <h1>Femme Fatale Tarot</h1>
-  <div class="subtitle">Ask the shadows, and they shall answer.</div>
-  
-  <div class="api-key-box">
-      <input type="password" id="api-key-input" placeholder="Paste your Gemini API Key here to enable AI features..." autocomplete="off">
-      <a href="https://aistudio.google.com/app/apikey" target="_blank">Get a free API key from Google AI Studio</a>
-  </div>
-
-  <div class="controls-container">
-    <div class="intention-box">
-        <input type="text" id="user-intention" placeholder="What seeks answers in the dark? (Enter your question...)" autocomplete="off">
-    </div>
-
-    <div class="controls">
-      <button id="btn-reset">Full Deck</button>
-      <button id="btn-shuffle">Shuffle Deck</button>
-      <button id="btn-draw-1">✨ Card of the Day</button>
-      <button id="btn-draw-3">Draw 3 Cards</button>
-      <button id="btn-interpret">✨ Interpret Spread ✨</button>
-    </div>
-  </div>
-
-  <div class="deck-grid" id="grid"></div>
-
-  <!-- LLM Interpretation Container -->
-  <div id="reading-box" class="reading-box">
-      <div id="reading-content"></div>
-      
-      <div id="reading-actions" class="reading-actions">
-          <button id="btn-listen">🗣️ Listen to the Shadows</button>
-      </div>
-
-      <!-- Interactive Dialogue Section -->
-      <div id="dialogue-section" class="dialogue-section">
-          <div id="chat-history" class="chat-history"></div>
-          <div class="followup-controls">
-              <input type="text" id="followup-input" placeholder="Ask her a follow-up question..." autocomplete="off" />
-              <button id="btn-followup">✨ Ask ✨</button>
-          </div>
-      </div>
-  </div>
-
-  <script>
-    const apiKey = ""; // Provided by execution environment internally
-    
-    // Helper function to pull the key from the UI if the internal environment is empty (like on GitHub)
-    function getActiveKey() {
-        const userInputKey = document.getElementById('api-key-input').value.trim();
-        return apiKey || userInputKey;
-    }
-
-    // Arrays matching exact spellings, mapped with their folder names
-    const majorArcana = [
-      "The Fool", "The Siren", "The High Priestess", "The Empress", "Emperor", 
-      "Heirophant", "The Lovers", "The Chariot", "Strength", "The Hermit", 
-      "Wheel Of Fortune", "Justice", "Hanged Man", "Death", "Temperance", 
-      "Devil", "Tower", "Star", "Moon", "The Sun", "Judgement", "World"
-    ].map(name => ({ name, folder: 'Major Arcana' }));
-
-    const wands = [
-      "Ace Of Wands", "2 Of Wands", "3 Of Wands", "4 Of Wands", "5 Of Wands", 
-      "6 Of Wands", "7 Of Wands", "8 Of Wands", "9 Of Wands", "10 Of Wands", 
-      "Page Of Wands", "Knight Of Wands", "Queen Of Wands", "King Of Wands"
-    ].map(name => ({ name, folder: 'Wands' }));
-    
-    const cups = [
-      "Ace Of Cups", "2 Of Cups", "3 Of Cups", "4 Of Cups", "5 Of Cups", 
-      "6 Of Cups", "7 Of Cups", "8 Of Cups", "9 Of Cups", "10 Of Cups", 
-      "Page Of Cups", "Knight Of Cups", "Queen Of Cups", "King Of Cups"
-    ].map(name => ({ name, folder: 'Cups' }));
-    
-    const swords = [
-      "Ace Of Swords", "Two Of Swords", "Three Of Swords", "Four Of Swords", 
-      "Five Of Swords", "Six Of Swords", "Seven Of Swords", "8Of Swords", 
-      "Nine Of Swords", "Ten Of Swords", "Page Of Swords", "Knnight Of Swords", 
-      "Queen Of Swords", "King Of Swords"
-    ].map(name => ({ name, folder: 'Swords' }));
-    
-    const pentacles = [
-      "Ace Of pentacles", "2 Of Pentacles", "3 Of Pentacles", "4 Of Pentacles", 
-      "5 Of Pentacles", "6 Of Pentacles", "7 Of Pentacles", "8 Of Pentacles", 
-      "9 Of Pentacles", "10 Of Pentacles", "Page of pentacles", "Knight Of Pentacles", 
-      "Queen Of Pentacles", "King Of Pentacles"
-    ].map(name => ({ name, folder: 'Pentacles' }));
-
-    const fullDeckOriginal = [...majorArcana, ...wands, ...cups, ...swords, ...pentacles];
-    const grid = document.getElementById('grid');
-    const interpretBtn = document.getElementById('btn-interpret');
-    const readingBox = document.getElementById('reading-box');
-    const readingContent = document.getElementById('reading-content');
-    const readingActions = document.getElementById('reading-actions');
-    const listenBtn = document.getElementById('btn-listen');
-    const dialogueSection = document.getElementById('dialogue-section');
-    const chatHistory = document.getElementById('chat-history');
-    const followupInput = document.getElementById('followup-input');
-    const followupBtn = document.getElementById('btn-followup');
-    const intentionInput = document.getElementById('user-intention');
-
-    const backFallbacks = [
-        encodeURI("Femme Fatale Design.png"),
-        encodeURI("Femme Fatale Design.jpeg"),
-        "https://raw.githubusercontent.com/OhMyImHigh/Custom-Femme-Tarot-5/main/Femme%20Fatale%20Design.png"
-    ];
-
-    let currentSpread = [];
-    let storedContext = ""; 
-    let currentReadingText = ""; // Holds text to send to TTS API
-
-    // Function to render any array of cards to the screen
-    function renderDeck(deckToRender, isReading = false) {
-      grid.innerHTML = ''; 
-      readingBox.classList.remove('active'); 
-      readingActions.style.display = 'none';
-      dialogueSection.classList.remove('active');
-      chatHistory.innerHTML = '';
-      storedContext = "";
-      currentReadingText = "";
-      
-      if (isReading) {
-        grid.classList.add('reading-mode');
-        interpretBtn.style.display = 'inline-block';
-        if(deckToRender.length === 1) {
-             interpretBtn.textContent = '✨ Interpret Card ✨';
-        } else {
-             interpretBtn.textContent = '✨ Interpret Spread ✨';
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Femme Fatale Tarot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #c5a059;
+            --noir: #020617;
+            --blood: #450a0a;
         }
-        currentSpread = deckToRender;
-      } else {
-        grid.classList.remove('reading-mode');
-        interpretBtn.style.display = 'none';
-        currentSpread = [];
-      }
 
-      const spreadLabels = ["Past", "Present", "Future"];
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: radial-gradient(circle at center, #1a0505 0%, #020617 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
 
-      deckToRender.forEach((card, index) => {
-        const container = document.createElement('div');
-        container.className = 'card-container';
-        
-        const cardInner = document.createElement('div');
-        cardInner.className = 'card-inner';
-        
-        const cardFront = document.createElement('div');
-        cardFront.className = 'card-front';
-        
-        const backImg = document.createElement('img');
-        backImg.alt = "Card Back";
-        backImg.dataset.idx = 0;
-        backImg.onerror = function() {
-            let i = parseInt(this.dataset.idx);
-            if (i < backFallbacks.length) {
-                this.src = backFallbacks[i];
-                this.dataset.idx = i + 1;
-            } else {
-                this.onerror = null;
-            }
-        };
-        backImg.src = backFallbacks[0];
-        backImg.dataset.idx = 1;
-        cardFront.appendChild(backImg);
-        
-        const cardBack = document.createElement('div');
-        cardBack.className = 'card-back';
-        
-        const faceImg = document.createElement('img');
-        faceImg.alt = card.name;
-        faceImg.loading = "lazy";
-        
-        const faceFallbacks = [
-            encodeURI(`${card.name}.jpeg`),
-            encodeURI(`${card.folder}/${card.name}.jpeg`),
-            encodeURI(`${card.name}.jpg`),
-            encodeURI(`${card.folder}/${card.name}.jpg`),
-            `https://raw.githubusercontent.com/OhMyImHigh/Custom-Femme-Tarot-5/main/${encodeURIComponent(card.name)}.jpeg`,
-            `https://raw.githubusercontent.com/OhMyImHigh/Custom-Femme-Tarot-5/main/${encodeURIComponent(card.folder)}/${encodeURIComponent(card.name)}.jpeg`
+        h1, h2, h3, .card-title {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            letter-spacing: 0.2em;
+        }
+
+        .spread-area {
+            min-height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            perspective: 2000px;
+            padding: 2rem;
+        }
+
+        .card-container {
+            width: 220px;
+            height: 380px;
+            cursor: pointer;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .card-container:hover {
+            transform: translateY(-15px) scale(1.05);
+            z-index: 10;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .card-container.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            border: 2px solid rgba(197, 160, 89, 0.4);
+            box-shadow: 0 15px 45px rgba(0,0,0,0.8);
+            overflow: hidden;
+        }
+
+        .card-front {
+            background: #000;
+            transform: rotateY(180deg);
+        }
+
+        .card-front img, .card-back img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .mystic-btn {
+            background: rgba(197, 160, 89, 0.05);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.8rem 2.2rem;
+            border-radius: 4px;
+            transition: all 0.5s ease;
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.2em;
+        }
+
+        .mystic-btn:hover:not(:disabled) {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 30px rgba(197, 160, 89, 0.4);
+        }
+
+        .mystic-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(15px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .glow-border {
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            background: #050505;
+        }
+
+        .loading-shimmer {
+            background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.1), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: var(--gold);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center">
+
+    <header class="text-center max-w-4xl mx-auto mt-12 mb-10 px-4">
+        <img src="Femme Fatale Design.png" alt="Femme Fatale" class="h-28 mx-auto mb-6 opacity-90" onerror="this.style.display='none'">
+        <h1 class="text-4xl md:text-5xl font-bold mb-2 uppercase">Femme Fatale Tarot</h1>
+        <p class="text-slate-500 text-sm italic uppercase tracking-[0.4em]">"The Oracle reveals only what the soul already knows."</p>
+    </header>
+
+    <div class="flex flex-wrap justify-center gap-6 mb-12 px-4">
+        <button id="draw-btn" onclick="drawSpread('daily')" class="mystic-btn">The Gaze (Single)</button>
+        <button id="triptych-btn" onclick="drawSpread('pastPresentFuture')" class="mystic-btn">The Triptych</button>
+        <button onclick="clearSpread()" class="mystic-btn opacity-50 hover:opacity-100">Reset</button>
+    </div>
+
+    <main id="spread-container" class="spread-area w-full max-w-7xl">
+        <!-- Cards injected here -->
+    </main>
+
+    <!-- Modal -->
+    <div id="card-modal" class="modal-overlay fixed inset-0 flex items-center justify-center z-50 p-4" onclick="closeModalOnOuter(event)">
+        <div class="max-w-5xl w-full glow-border rounded-lg overflow-hidden flex flex-col md:flex-row shadow-2xl scale-95 transition-transform duration-300" id="modal-content">
+            <button onclick="closeModal()" class="absolute top-6 right-6 text-gold text-4xl hover:scale-110 transition-transform z-20">&times;</button>
+            
+            <div class="md:w-1/2 bg-black flex items-center justify-center relative min-h-[400px]">
+                <img id="modal-image" src="" alt="Card Art" class="max-h-[85vh] w-full object-contain p-4 z-10">
+            </div>
+            
+            <div class="md:w-1/2 p-10 md:p-16 flex flex-col justify-center bg-[#050505] relative">
+                <h2 id="modal-title" class="text-4xl mb-6 uppercase tracking-[0.1em] border-b border-gold/20 pb-4"></h2>
+                
+                <div id="reading-container">
+                    <div id="api-loading" class="hidden space-y-4">
+                        <div class="h-4 w-24 bg-gold/10 rounded loading-shimmer"></div>
+                        <div class="h-8 w-full bg-gold/5 rounded loading-shimmer"></div>
+                        <div class="h-4 w-24 bg-gold/10 rounded loading-shimmer mt-8"></div>
+                        <div class="h-32 w-full bg-gold/5 rounded loading-shimmer"></div>
+                        <p class="text-gold text-xs mt-6 italic animate-pulse uppercase tracking-widest text-center">Consulting the Oracle...</p>
+                    </div>
+
+                    <div id="reading-text" class="hidden">
+                        <div class="mb-8">
+                            <span class="text-gold text-xs uppercase tracking-[0.4em] font-black opacity-60 block mb-2">The Pulse</span>
+                            <p id="modal-keywords" class="text-2xl text-slate-100 font-light italic"></p>
+                        </div>
+                        
+                        <div class="overflow-y-auto max-h-80 pr-4 custom-scrollbar">
+                            <span class="text-gold text-xs uppercase tracking-[0.4em] font-black opacity-60 block mb-2">The Revelation</span>
+                            <p id="modal-desc" class="text-slate-300 leading-relaxed text-lg font-light"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set API key to empty string - environment provides it at runtime
+        const apiKey = ""; 
+
+        // Mapping filenames to match your exact uploads including specific typos
+        const tarotData = [
+            { id: 0, name: "The Fool", file: "The Fool.jpeg" },
+            { id: 1, name: "The High Priestess", file: "The High Priestess.jpeg" },
+            { id: 2, name: "The Empress", file: "The Empress.jpeg" },
+            { id: 3, name: "The Emperor", file: "Emperor.jpeg" },
+            { id: 4, name: "The Hierophant", file: "Heirophant.jpeg" },
+            { id: 5, name: "The Lovers", file: "The Lovers.jpeg" },
+            { id: 6, name: "The Chariot", file: "The Chariot.jpeg" },
+            { id: 7, name: "Strength", file: "Strength.jpeg" },
+            { id: 8, name: "The Hermit", file: "The Hermit.jpeg" },
+            { id: 9, name: "Wheel of Fortune", file: "Wheel Of Fortune.jpeg" },
+            { id: 10, name: "Justice", file: "Justice.jpeg" },
+            { id: 11, name: "Hanged Man", file: "Hanged Man.jpeg" },
+            { id: 12, name: "Death", file: "Death.jpeg" },
+            { id: 13, name: "Temperance", file: "Temperance.jpeg" },
+            { id: 14, name: "The Devil", file: "Devil.jpeg" },
+            { id: 15, name: "The Tower", file: "Tower.jpeg" },
+            { id: 16, name: "The Star", file: "Star.jpeg" },
+            { id: 17, name: "The Moon", file: "Moon.jpeg" },
+            { id: 18, name: "The Sun", file: "The Sun.jpeg" },
+            { id: 19, name: "Judgement", file: "Judgement.jpeg" },
+            { id: 20, name: "The World", file: "World.jpeg" },
+            { id: 21, name: "The Siren", file: "The Siren.jpeg" },
+            { id: 22, name: "Ace Of Cups", file: "Ace Of Cups.jpeg" },
+            { id: 23, name: "10 Of Cups", file: "10 Of Cups.jpeg" },
+            { id: 24, name: "Ace Of Wands", file: "Ace Of Wands.jpeg" },
+            { id: 25, name: "Ace Of Swords", file: "Ace Of Swords.jpeg" },
+            { id: 26, name: "Ace Of pentacles", file: "Ace Of pentacles.jpeg" },
+            { id: 27, name: "8 of Swords", file: "8Of Swords.jpeg" },
+            { id: 28, name: "Knight Of Swords", file: "Knnight Of Swords.jpeg" },
+            { id: 29, name: "Page of pentacles", file: "Page of pentacles.jpeg" },
+            { id: 30, name: "10 Of Pentacles", file: "10 Of Pentacles.jpeg" },
+            { id: 31, name: "10 Of Wands", file: "10 Of Wands.jpeg" },
+            { id: 32, name: "2 Of Cups", file: "2 Of Cups.jpeg" },
+            { id: 33, name: "2 Of Pentacles", file: "2 Of Pentacles.jpeg" },
+            { id: 34, name: "2 Of Wands", file: "2 Of Wands.jpeg" },
+            { id: 35, name: "3 Of Cups", file: "3 Of Cups.jpeg" },
+            { id: 36, name: "3 Of Pentacles", file: "3 Of Pentacles.jpeg" },
+            { id: 37, name: "3 Of Wands", file: "3 Of Wands.jpeg" },
+            { id: 38, name: "4 Of Cups", file: "4 Of Cups.jpeg" },
+            { id: 39, name: "4 Of Pentacles", file: "4 Of Pentacles.jpeg" },
+            { id: 40, name: "4 Of Wands", file: "4 Of Wands.jpeg" },
+            { id: 41, name: "5 Of Cups", file: "5 Of Cups.jpeg" },
+            { id: 42, name: "5 Of Pentacles", file: "5 Of Pentacles.jpeg" },
+            { id: 43, name: "5 Of Wands", file: "5 Of Wands.jpeg" },
+            { id: 44, name: "6 Of Cups", file: "6 Of Cups.jpeg" },
+            { id: 45, name: "6 Of Pentacles", file: "6 Of Pentacles.jpeg" },
+            { id: 46, name: "6 Of Wands", file: "6 Of Wands.jpeg" },
+            { id: 47, name: "7 Of Cups", file: "7 Of Cups.jpeg" },
+            { id: 48, name: "7 Of Pentacles", file: "7 Of Pentacles.jpeg" },
+            { id: 49, name: "7 Of Wands", file: "7 Of Wands.jpeg" },
+            { id: 50, name: "8 Of Cups", file: "8 Of Cups.jpeg" },
+            { id: 51, name: "8 Of Pentacles", file: "8 Of Pentacles.jpeg" },
+            { id: 52, name: "8 Of Wands", file: "8 Of Wands.jpeg" },
+            { id: 53, name: "9 Of Cups", file: "9 Of Cups.jpeg" },
+            { id: 54, name: "9 Of Pentacles", file: "9 Of Pentacles.jpeg" },
+            { id: 55, name: "9 Of Wands", file: "9 Of Wands.jpeg" },
+            { id: 56, name: "King Of Cups", file: "King Of Cups.jpeg" },
+            { id: 57, name: "King Of Pentacles", file: "King Of Pentacles.jpeg" },
+            { id: 58, name: "King Of Swords", file: "King Of Swords.jpeg" },
+            { id: 59, name: "King Of Wands", file: "King Of Wands.jpeg" },
+            { id: 60, name: "Knight Of Cups", file: "Knight Of Cups.jpeg" },
+            { id: 61, name: "Knight Of Pentacles", file: "Knight Of Pentacles.jpeg" },
+            { id: 62, name: "Knight Of Wands", file: "Knight Of Wands.jpeg" },
+            { id: 63, name: "Page Of Cups", file: "Page Of Cups.jpeg" },
+            { id: 64, name: "Page Of Swords", file: "Page Of Swords.jpeg" },
+            { id: 65, name: "Page Of Wands", file: "Page Of Wands.jpeg" },
+            { id: 66, name: "Queen Of Cups", file: "Queen Of Cups.jpeg" },
+            { id: 67, name: "Queen Of Pentacles", file: "Queen Of Pentacles.jpeg" },
+            { id: 68, name: "Queen Of Swords", file: "Queen Of Swords.jpeg" },
+            { id: 69, name: "Queen Of Wands", file: "Queen Of Wands.jpeg" },
+            { id: 70, name: "Seven Of Swords", file: "Seven Of Swords.jpeg" },
+            { id: 71, name: "Six Of Swords", file: "Six Of Swords.jpeg" },
+            { id: 72, name: "Ten Of Swords", file: "Ten Of Swords.jpeg" },
+            { id: 73, name: "Two Of Swords", file: "Two Of Swords.jpeg" },
+            { id: 74, name: "Three Of Swords", file: "Three Of Swords.jpeg" },
+            { id: 75, name: "Four Of Swords", file: "Four Of Swords.jpeg" },
+            { id: 76, name: "Five Of Swords", file: "Five Of Swords.jpeg" },
+            { id: 77, name: "Nine Of Swords", file: "Nine Of Swords.jpeg" }
         ];
 
-        faceImg.dataset.idx = 0;
-        faceImg.onerror = function() {
-          let i = parseInt(this.dataset.idx);
-          if (i < faceFallbacks.length) {
-              this.src = faceFallbacks[i];
-              this.dataset.idx = i + 1;
-          } else {
-              this.onerror = null; 
-              this.style.display = 'none';
-              cardBack.classList.add('load-error');
-              cardBack.innerHTML = `<span>Missing File:</span><br><br><strong>${card.name}</strong>`;
-          }
-        };
+        async function fetchAIReading(cardName, position = "") {
+            const systemPrompt = `You are the Femme Fatale Tarot Oracle. You speak with creative, seductive, and original authority. 
+            ABSOLUTELY PROHIBITED WORDS: safeguarded, hall monitor, velvet, ghost, glitch, teeth, ruin, coffee, kitchen, table, sink, mug, jacket, chair, coat, static, shadow, shadows, tooth.
+            Do not use generic or plain language. Provide a reading that feels immersive and dark.
+            Format JSON only: {"keywords": "...", "reading": "..."}`;
 
-        faceImg.src = faceFallbacks[0];
-        faceImg.dataset.idx = 1;
+            const userPrompt = `A seeker has drawn ${cardName}${position ? ` for their ${position}` : ''}. Tell them what the cosmos reveals.`;
 
-        cardBack.appendChild(faceImg);
-
-        // Add spread labels only if it's a 3 card spread
-        if (isReading && deckToRender.length === 3 && index < 3) {
-            const label = document.createElement('div');
-            label.className = 'spread-label';
-            label.innerText = spreadLabels[index];
-            cardInner.appendChild(label);
-        } else if (isReading && deckToRender.length === 1) {
-            const label = document.createElement('div');
-            label.className = 'spread-label';
-            label.innerText = "Insight";
-            cardInner.appendChild(label);
-        }
-
-        cardInner.appendChild(cardFront);
-        cardInner.appendChild(cardBack);
-        container.appendChild(cardInner);
-        
-        container.onclick = () => cardInner.classList.toggle('is-flipped');
-        grid.appendChild(container);
-      });
-    }
-
-    // Helper to shuffle an array
-    function shuffleArray(array) {
-      const shuffled = [...array];
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-      return shuffled;
-    }
-
-    // Gemini Text Generation API integration with Exponential Backoff
-    async function fetchWithRetry(url, options, maxRetries = 5) {
-      let delays = [1000, 2000, 4000, 8000, 16000];
-      for (let i = 0; i < maxRetries; i++) {
-        try {
-          const response = await fetch(url, options);
-          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-          return await response.json();
-        } catch (error) {
-          if (i === maxRetries - 1) throw error;
-          await new Promise(resolve => setTimeout(resolve, delays[i]));
-        }
-      }
-    }
-
-    async function callGeminiText(promptText) {
-        const activeKey = getActiveKey();
-        
-        const systemPrompt = `You are a mysterious, cynical, but wise 1940s noir femme fatale who reads tarot in a dimly lit, smoky speakeasy. You address the user using noir slang (kid, darling, sugar, pal). Focus on themes of ambition, secrets, danger, and allure.`;
-        
-        const payload = {
-            contents: [{ parts: [{ text: promptText }] }],
-            systemInstruction: { parts: [{ text: systemPrompt }] }
-        };
-
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${activeKey}`;
-        
-        const data = await fetchWithRetry(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
-        
-        return data.candidates?.[0]?.content?.parts?.[0]?.text;
-    }
-
-    // Binary conversions for TTS audio
-    function base64ToArrayBuffer(base64) {
-        const binaryString = window.atob(base64);
-        const bytes = new Uint8Array(binaryString.length);
-        for (let i = 0; i < binaryString.length; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
-        }
-        return bytes.buffer;
-    }
-
-    function pcmToWav(pcmData, sampleRate) {
-        const numChannels = 1;
-        const bytesPerSample = 2;
-        const blockAlign = numChannels * bytesPerSample;
-        const byteRate = sampleRate * blockAlign;
-        const dataSize = pcmData.byteLength;
-        const chunkSize = 36 + dataSize;
-        const buffer = new ArrayBuffer(44 + dataSize);
-        const view = new DataView(buffer);
-
-        const writeString = (view, offset, string) => {
-            for (let i = 0; i < string.length; i++) { view.setUint8(offset + i, string.charCodeAt(i)); }
-        };
-
-        writeString(view, 0, 'RIFF');
-        view.setUint32(4, chunkSize, true);
-        writeString(view, 8, 'WAVE');
-        writeString(view, 12, 'fmt ');
-        view.setUint32(16, 16, true);
-        view.setUint16(20, 1, true); // PCM
-        view.setUint16(22, numChannels, true);
-        view.setUint32(24, sampleRate, true);
-        view.setUint32(28, byteRate, true);
-        view.setUint16(32, blockAlign, true);
-        view.setUint16(34, bytesPerSample * 8, true);
-        writeString(view, 36, 'data');
-        view.setUint32(40, dataSize, true);
-
-        const pcmArray = new Uint8Array(pcmData);
-        for (let i = 0; i < pcmArray.length; i++) { view.setUint8(44 + i, pcmArray[i]); }
-
-        return new Blob([buffer], { type: 'audio/wav' });
-    }
-
-    // Gemini Text-to-Speech API Integration
-    async function playTTS(text, buttonElement) {
-        const activeKey = getActiveKey();
-        
-        if(!activeKey) { 
-            if(buttonElement) {
-                buttonElement.disabled = false;
-                buttonElement.textContent = '❌ API Key Required';
-            }
-            return; 
-        }
-        
-        if (buttonElement) {
-            buttonElement.disabled = true;
-            buttonElement.textContent = '⏳ Summoning Voice...';
-        }
-
-        // Strip HTML tags so the voice reads cleanly
-        const cleanText = text.replace(/<[^>]+>/g, '').trim();
-
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${activeKey}`;
-        const payload = {
-            contents: [{ parts: [{ text: "Speak in a sultry, mysterious, dramatic tone: " + cleanText }] }],
-            generationConfig: {
-                responseModalities: ["AUDIO"],
-                speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Aoede" } } }
-            }
-        };
-
-        try {
-            const data = await fetchWithRetry(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            });
-
-            const inlineData = data.candidates?.[0]?.content?.parts?.[0]?.inlineData;
-            if (inlineData) {
-                const match = inlineData.mimeType.match(/rate=(\d+)/);
-                const rate = match ? parseInt(match[1]) : 24000;
-                
-                const pcmBuffer = base64ToArrayBuffer(inlineData.data);
-                const wavBlob = pcmToWav(pcmBuffer, rate);
-                const audioUrl = URL.createObjectURL(wavBlob);
-                const audio = new Audio(audioUrl);
-                
-                audio.onplay = () => {
-                    if(buttonElement) buttonElement.textContent = '🔊 Speaking...';
-                };
-                audio.onended = () => {
-                    if(buttonElement) {
-                        buttonElement.disabled = false;
-                        buttonElement.textContent = '🗣️ Listen Again';
-                    }
-                };
-                
-                audio.play();
-            } else {
-                throw new Error("No audio data returned");
-            }
-        } catch (error) {
-            console.error("TTS Error:", error);
-            if(buttonElement) {
-                buttonElement.disabled = false;
-                buttonElement.textContent = '❌ Voice Lost';
-            }
-        }
-    }
-
-    async function interpretCards() {
-        if (currentSpread.length === 0) return;
-        
-        if (!getActiveKey()) {
-             readingBox.classList.add('active');
-             readingContent.innerHTML = `<p class="error-text">The shadows are silent. (Please paste a free Gemini API Key into the box at the top of the page to unlock the AI Tarot Reader!)</p>`;
-             readingBox.scrollIntoView({ behavior: 'smooth', block: 'end' });
-             return;
-        }
-
-        // Auto-flip all cards for the user if they haven't yet
-        document.querySelectorAll('.card-inner').forEach(card => card.classList.add('is-flipped'));
-        interpretBtn.disabled = true;
-
-        readingBox.classList.add('active');
-        readingContent.innerHTML = `<p class="loading-text">The shadows are shifting... give me a moment to look closely, darling...</p>`;
-        readingBox.scrollIntoView({ behavior: 'smooth', block: 'end' });
-
-        const intent = intentionInput.value.trim();
-        let userPrompt = "";
-
-        if (currentSpread.length === 3) {
-            userPrompt = `The user has drawn three cards for a Past, Present, and Future reading from a custom "Femme Fatale" tarot deck.\nPast: ${currentSpread[0].name}\nPresent: ${currentSpread[1].name}\nFuture: ${currentSpread[2].name}\n`;
-            if (intent) userPrompt += `\nThe user asked this specific question before drawing: "${intent}".\n`;
-            userPrompt += `Give a moody, atmospheric, and insightful interpretation of this spread answering their question. Write 3 short paragraphs weaving a cohesive narrative.`;
-        } else if (currentSpread.length === 1) {
-            userPrompt = `The user has drawn a single card for quick daily insight from a custom "Femme Fatale" tarot deck: ${currentSpread[0].name}.\n`;
-            if (intent) userPrompt += `\nThe user asked this specific question before drawing: "${intent}".\n`;
-            userPrompt += `Give a brief, punchy, moody interpretation of this single card. Write 1 or 2 short paragraphs.`;
-        }
-
-        userPrompt += ` Return the text nicely formatted with HTML paragraph tags <p>. Do not include markdown formatting, just integrate it into the prose.`;
-
-        try {
-            const textResponse = await callGeminiText(userPrompt);
-            if(textResponse) {
-                currentReadingText = textResponse;
-                readingContent.innerHTML = textResponse;
-                
-                // Save context for followups
-                storedContext = `Original Question: ${intent || "General Reading"}\nCards: ${currentSpread.map(c => c.name).join(', ')}\nYour Reading: ${textResponse}`;
-                
-                // Show actions (Listen) and dialogue section
-                readingActions.style.display = 'block';
-                dialogueSection.classList.add('active');
-                listenBtn.textContent = '🗣️ Listen to the Shadows';
-            } else {
-                throw new Error("Empty response");
-            }
-        } catch (error) {
-            readingContent.innerHTML = `<p class="error-text">Looks like the cops raided the joint and cut the power. (Network Error). Try drawing again, kid.</p>`;
-        } finally {
-            interpretBtn.disabled = false;
-        }
-    }
-
-    async function handleFollowup() {
-        const text = followupInput.value.trim();
-        if(!text || !storedContext) return;
-
-        // Add user message to UI
-        const userBubble = document.createElement('div');
-        userBubble.className = 'chat-bubble chat-user';
-        userBubble.textContent = text;
-        chatHistory.appendChild(userBubble);
-        
-        followupInput.value = '';
-        followupBtn.disabled = true;
-
-        // Add loading bubble
-        const loadBubble = document.createElement('div');
-        loadBubble.className = 'chat-bubble chat-reader loading-text';
-        loadBubble.textContent = 'Thinking...';
-        chatHistory.appendChild(loadBubble);
-        
-        dialogueSection.scrollIntoView({ behavior: 'smooth', block: 'end' });
-
-        const followupPrompt = `Context of our reading so far:\n${storedContext}\n\nThe user now asks a follow-up question: "${text}"\n\nAnswer them directly in character (1 short paragraph). No HTML tags needed, just plain text.`;
-
-        try {
-            const response = await callGeminiText(followupPrompt);
-            chatHistory.removeChild(loadBubble);
-            
-            if(response) {
-                const readerBubble = document.createElement('div');
-                readerBubble.className = 'chat-bubble chat-reader';
-                
-                // The text
-                const textNode = document.createElement('span');
-                textNode.innerHTML = response;
-                readerBubble.appendChild(textNode);
-
-                // Add mini listen button to chat responses
-                const chatListenBtn = document.createElement('button');
-                chatListenBtn.className = 'mini-listen-btn';
-                chatListenBtn.title = 'Listen';
-                chatListenBtn.innerHTML = '▶';
-                chatListenBtn.onclick = () => {
-                    const originalIcon = chatListenBtn.innerHTML;
-                    playTTS(response, chatListenBtn).then(() => {
-                        chatListenBtn.innerHTML = originalIcon;
+            let delay = 1000;
+            for (let i = 0; i < 5; i++) {
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: userPrompt }] }],
+                            systemInstruction: { parts: [{ text: systemPrompt }] },
+                            generationConfig: { 
+                                responseMimeType: "application/json",
+                                responseSchema: {
+                                    type: "OBJECT",
+                                    properties: {
+                                        keywords: { type: "STRING" },
+                                        reading: { type: "STRING" }
+                                    },
+                                    required: ["keywords", "reading"]
+                                }
+                            }
+                        })
                     });
-                };
-                readerBubble.appendChild(chatListenBtn);
-
-                chatHistory.appendChild(readerBubble);
-                
-                // Update context memory
-                storedContext += `\nUser asked: ${text}\nYou answered: ${response}`;
+                    
+                    if (!response.ok) throw new Error('Network Error');
+                    const data = await response.json();
+                    return JSON.parse(data.candidates[0].content.parts[0].text);
+                } catch (e) {
+                    if (i === 4) throw e;
+                    await new Promise(r => setTimeout(r, delay));
+                    delay *= 2;
+                }
             }
-        } catch(err) {
-            chatHistory.removeChild(loadBubble);
-            const errorBubble = document.createElement('div');
-            errorBubble.className = 'chat-bubble chat-reader error-text';
-            errorBubble.textContent = "I lost my train of thought, darling. The connection is bad tonight.";
-            chatHistory.appendChild(errorBubble);
-        } finally {
-            followupBtn.disabled = false;
-            dialogueSection.scrollIntoView({ behavior: 'smooth', block: 'end' });
         }
-    }
 
-    // Event Listeners for Buttons
-    document.getElementById('btn-reset').addEventListener('click', () => {
-      renderDeck(fullDeckOriginal, false);
-      intentionInput.value = '';
-    });
+        const container = document.getElementById('spread-container');
+        const modal = document.getElementById('card-modal');
+        const modalContent = document.getElementById('modal-content');
 
-    document.getElementById('btn-shuffle').addEventListener('click', () => {
-      const shuffledDeck = shuffleArray(fullDeckOriginal);
-      renderDeck(shuffledDeck, false);
-    });
+        function createCard(cardData, label) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-700';
+            wrapper.innerHTML = `
+                ${label ? `<span class="reading-label text-gold text-xs uppercase tracking-[0.3em] font-black opacity-60 mb-2">${label}</span>` : ''}
+                <div class="card-container" onclick="handleFlip(this, ${cardData.id}, '${label || ''}')">
+                    <div class="card-inner">
+                        <div class="card-back">
+                            <img src="BackDesign.png" alt="Card Back" onerror="this.src='Femme Fatale Design.png'">
+                        </div>
+                        <div class="card-front">
+                            <img src="${cardData.file}" alt="${cardData.name}" onerror="this.src='Femme Fatale Design.png'">
+                        </div>
+                    </div>
+                </div>
+            `;
+            return wrapper;
+        }
 
-    document.getElementById('btn-draw-1').addEventListener('click', () => {
-      const shuffledDeck = shuffleArray(fullDeckOriginal);
-      const drawnCards = shuffledDeck.slice(0, 1); // Take top 1
-      renderDeck(drawnCards, true);
-    });
+        function drawSpread(type) {
+            clearSpread();
+            const shuffled = [...tarotData].sort(() => 0.5 - Math.random());
+            if (type === 'daily') {
+                container.appendChild(createCard(shuffled[0]));
+            } else {
+                ['Past', 'Present', 'Future'].forEach((label, i) => {
+                    setTimeout(() => container.appendChild(createCard(shuffled[i], label)), i * 200);
+                });
+            }
+        }
 
-    document.getElementById('btn-draw-3').addEventListener('click', () => {
-      const shuffledDeck = shuffleArray(fullDeckOriginal);
-      const drawnCards = shuffledDeck.slice(0, 3); // Take top 3
-      renderDeck(drawnCards, true);
-    });
+        async function handleFlip(el, id, position) {
+            if (el.classList.contains('flipped')) {
+                showModal(id, position);
+                return;
+            }
+            el.classList.add('flipped');
+            setTimeout(() => showModal(id, position), 800);
+        }
 
-    interpretBtn.addEventListener('click', interpretCards);
-    listenBtn.addEventListener('click', () => playTTS(currentReadingText, listenBtn));
-    
-    followupBtn.addEventListener('click', handleFollowup);
-    followupInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleFollowup();
-    });
+        async function showModal(id, position) {
+            const card = tarotData.find(c => c.id === id);
+            document.getElementById('modal-title').innerText = card.name;
+            document.getElementById('modal-image').src = card.file;
+            
+            modal.classList.add('active');
+            modalContent.classList.remove('scale-95');
 
-    // Initial render
-    renderDeck(fullDeckOriginal, false);
-  </script>
+            document.getElementById('reading-text').classList.add('hidden');
+            document.getElementById('api-loading').classList.remove('hidden');
+
+            try {
+                const result = await fetchAIReading(card.name, position);
+                document.getElementById('modal-keywords').innerText = result.keywords;
+                document.getElementById('modal-desc').innerText = result.reading;
+                document.getElementById('api-loading').classList.add('hidden');
+                document.getElementById('reading-text').classList.remove('hidden');
+            } catch (err) {
+                document.getElementById('api-loading').innerHTML = `<p class="text-red-500 italic uppercase text-xs tracking-widest text-center">The veil is too thick. Check your connection.</p>`;
+            }
+        }
+
+        function closeModal() {
+            modalContent.classList.add('scale-95');
+            setTimeout(() => modal.classList.remove('active'), 200);
+        }
+
+        function closeModalOnOuter(e) { if (e.target === modal) closeModal(); }
+        function clearSpread() { container.innerHTML = ''; }
+
+        window.onload = () => drawSpread('daily');
+    </script>
 </body>
 </html>
