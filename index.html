@@ -5,57 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Femme Fatale Tarot</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Fauna+One&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #c5a059;
-            --noir: #020617;
-            --blood: #450a0a;
+            --gold: #d4af37;
+            --deep-purple: #1a1a2e;
+            --midnight: #16213e;
         }
 
         body {
-            font-family: 'Quicksand', sans-serif;
-            background: radial-gradient(circle at center, #1a0505 0%, #020617 100%);
-            color: #f8fafc;
+            font-family: 'Fauna One', serif;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #0f0f1a 100%);
+            color: #e0e0e0;
             min-height: 100vh;
-            margin: 0;
             overflow-x: hidden;
         }
 
-        h1, h2, h3, .card-title {
+        h1, h2, h3 {
             font-family: 'Cinzel', serif;
             color: var(--gold);
-            letter-spacing: 0.2em;
-        }
-
-        .spread-area {
-            min-height: 500px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            perspective: 2000px;
-            padding: 2rem;
         }
 
         .card-container {
-            width: 220px;
-            height: 380px;
+            perspective: 1000px;
+            width: 200px;
+            height: 320px;
             cursor: pointer;
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .card-container:hover {
-            transform: translateY(-15px) scale(1.05);
-            z-index: 10;
         }
 
         .card-inner {
             position: relative;
             width: 100%;
             height: 100%;
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             transform-style: preserve-3d;
         }
 
@@ -67,10 +50,11 @@
             position: absolute;
             width: 100%;
             height: 100%;
+            -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
-            border-radius: 0.75rem;
-            border: 2px solid rgba(197, 160, 89, 0.4);
-            box-shadow: 0 15px 45px rgba(0,0,0,0.8);
+            border-radius: 12px;
+            border: 2px solid var(--gold);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             overflow: hidden;
         }
 
@@ -85,57 +69,31 @@
             object-fit: cover;
         }
 
-        .mystic-btn {
-            background: rgba(197, 160, 89, 0.05);
+        .mystic-button {
+            background: transparent;
             border: 1px solid var(--gold);
             color: var(--gold);
-            padding: 0.8rem 2.2rem;
-            border-radius: 4px;
-            transition: all 0.5s ease;
+            transition: all 0.3s ease;
             text-transform: uppercase;
-            font-weight: 700;
-            font-size: 0.85rem;
-            letter-spacing: 0.2em;
+            letter-spacing: 2px;
+            padding: 8px 24px;
+            border-radius: 9999px;
+            font-weight: bold;
         }
 
-        .mystic-btn:hover:not(:disabled) {
+        .mystic-button:hover {
             background: var(--gold);
-            color: #000;
-            box-shadow: 0 0 30px rgba(197, 160, 89, 0.4);
+            color: black;
+            box-shadow: 0 0 15px var(--gold);
         }
 
-        .mystic-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
+        .glow-text {
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
         }
 
-        .modal-overlay {
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(15px);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .glow-border {
-            border: 1px solid rgba(197, 160, 89, 0.3);
-            background: #050505;
-        }
-
-        .loading-shimmer {
-            background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.1), transparent);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+        .modal {
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(8px);
         }
 
         .custom-scrollbar::-webkit-scrollbar {
@@ -146,55 +104,44 @@
         }
     </style>
 </head>
-<body class="flex flex-col items-center">
+<body class="p-4 md:p-8">
 
-    <header class="text-center max-w-4xl mx-auto mt-12 mb-10 px-4">
-        <img src="Femme Fatale Design.png" alt="Femme Fatale" class="h-28 mx-auto mb-6 opacity-90" onerror="this.style.display='none'">
-        <h1 class="text-4xl md:text-5xl font-bold mb-2 uppercase">Femme Fatale Tarot</h1>
-        <p class="text-slate-500 text-sm italic uppercase tracking-[0.4em]">"The Oracle reveals only what the soul already knows."</p>
+    <!-- Header Section -->
+    <header class="text-center mb-12">
+        <h1 class="text-4xl md:text-6xl font-bold mb-2 glow-text uppercase">Femme Fatale Tarot</h1>
+        <p class="text-gray-400 italic">"The cards only reveal what the soul already knows."</p>
     </header>
 
-    <div class="flex flex-wrap justify-center gap-6 mb-12 px-4">
-        <button id="draw-btn" onclick="drawSpread('daily')" class="mystic-btn">The Gaze (Single)</button>
-        <button id="triptych-btn" onclick="drawSpread('pastPresentFuture')" class="mystic-btn">The Triptych</button>
-        <button onclick="clearSpread()" class="mystic-btn opacity-50 hover:opacity-100">Reset</button>
+    <!-- Controls -->
+    <div class="flex justify-center gap-4 mb-12">
+        <button onclick="drawCard()" class="mystic-button">Draw Daily Card</button>
+        <button onclick="resetDeck()" class="mystic-button">Reset Deck</button>
     </div>
 
-    <main id="spread-container" class="spread-area w-full max-w-7xl">
-        <!-- Cards injected here -->
+    <!-- Main Deck Grid -->
+    <main id="deck-grid" class="flex flex-wrap justify-center gap-8 max-w-7xl mx-auto">
+        <!-- Cards will be injected here -->
     </main>
 
-    <!-- Modal -->
-    <div id="card-modal" class="modal-overlay fixed inset-0 flex items-center justify-center z-50 p-4" onclick="closeModalOnOuter(event)">
-        <div class="max-w-5xl w-full glow-border rounded-lg overflow-hidden flex flex-col md:flex-row shadow-2xl scale-95 transition-transform duration-300" id="modal-content">
-            <button onclick="closeModal()" class="absolute top-6 right-6 text-gold text-4xl hover:scale-110 transition-transform z-20">&times;</button>
+    <!-- Reading Modal -->
+    <div id="reading-modal" class="modal fixed inset-0 flex items-center justify-center z-50 hidden p-4" onclick="closeModalOnOuter(event)">
+        <div class="bg-[#1a1a2e] border-2 border-[#d4af37] p-8 rounded-xl max-w-4xl w-full text-center relative flex flex-col md:flex-row gap-8" onclick="event.stopPropagation()">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gold text-2xl z-10">&times;</button>
             
-            <div class="md:w-1/2 bg-black flex items-center justify-center relative min-h-[400px]">
-                <img id="modal-image" src="" alt="Card Art" class="max-h-[85vh] w-full object-contain p-4 z-10">
+            <div class="md:w-1/2 flex items-center justify-center bg-black rounded-lg">
+                <img id="modal-image" src="" alt="Card Art" class="max-h-[60vh] object-contain">
             </div>
-            
-            <div class="md:w-1/2 p-10 md:p-16 flex flex-col justify-center bg-[#050505] relative">
-                <h2 id="modal-title" class="text-4xl mb-6 uppercase tracking-[0.1em] border-b border-gold/20 pb-4"></h2>
+
+            <div class="md:w-1/2 flex flex-col justify-center text-left">
+                <h2 id="modal-title" class="text-3xl mb-4 border-b border-gold/20 pb-2 uppercase tracking-widest"></h2>
                 
                 <div id="reading-container">
-                    <div id="api-loading" class="hidden space-y-4">
-                        <div class="h-4 w-24 bg-gold/10 rounded loading-shimmer"></div>
-                        <div class="h-8 w-full bg-gold/5 rounded loading-shimmer"></div>
-                        <div class="h-4 w-24 bg-gold/10 rounded loading-shimmer mt-8"></div>
-                        <div class="h-32 w-full bg-gold/5 rounded loading-shimmer"></div>
-                        <p class="text-gold text-xs mt-6 italic animate-pulse uppercase tracking-widest text-center">Consulting the Oracle...</p>
-                    </div>
-
-                    <div id="reading-text" class="hidden">
-                        <div class="mb-8">
-                            <span class="text-gold text-xs uppercase tracking-[0.4em] font-black opacity-60 block mb-2">The Pulse</span>
-                            <p id="modal-keywords" class="text-2xl text-slate-100 font-light italic"></p>
-                        </div>
-                        
-                        <div class="overflow-y-auto max-h-80 pr-4 custom-scrollbar">
-                            <span class="text-gold text-xs uppercase tracking-[0.4em] font-black opacity-60 block mb-2">The Revelation</span>
-                            <p id="modal-desc" class="text-slate-300 leading-relaxed text-lg font-light"></p>
-                        </div>
+                    <p class="text-sm text-gold uppercase tracking-widest mb-1 opacity-60">Keywords</p>
+                    <p id="modal-keywords" class="italic text-gray-200 mb-6 text-xl font-light"></p>
+                    
+                    <div class="max-h-60 overflow-y-auto custom-scrollbar pr-2">
+                        <p class="text-sm text-gold uppercase tracking-widest mb-1 opacity-60">The Revelation</p>
+                        <p id="modal-desc" class="text-lg leading-relaxed text-gray-300 font-light"></p>
                     </div>
                 </div>
             </div>
@@ -202,208 +149,128 @@
     </div>
 
     <script>
-        // Set API key to empty string - environment provides it at runtime
+        // PASTE YOUR API KEY INSIDE THE QUOTES BELOW
         const apiKey = "AIzaSyAqgRQClZt7LChZ43wzfPFBYuLq0hjEKSE"; 
 
-        // Mapping filenames to match your exact uploads including specific typos
+        // EXACT mapping of your provided filenames
         const tarotData = [
-            { id: 0, name: "The Fool", file: "The Fool.jpeg" },
-            { id: 1, name: "The High Priestess", file: "The High Priestess.jpeg" },
-            { id: 2, name: "The Empress", file: "The Empress.jpeg" },
-            { id: 3, name: "The Emperor", file: "Emperor.jpeg" },
-            { id: 4, name: "The Hierophant", file: "Heirophant.jpeg" },
-            { id: 5, name: "The Lovers", file: "The Lovers.jpeg" },
-            { id: 6, name: "The Chariot", file: "The Chariot.jpeg" },
-            { id: 7, name: "Strength", file: "Strength.jpeg" },
-            { id: 8, name: "The Hermit", file: "The Hermit.jpeg" },
-            { id: 9, name: "Wheel of Fortune", file: "Wheel Of Fortune.jpeg" },
-            { id: 10, name: "Justice", file: "Justice.jpeg" },
-            { id: 11, name: "Hanged Man", file: "Hanged Man.jpeg" },
-            { id: 12, name: "Death", file: "Death.jpeg" },
-            { id: 13, name: "Temperance", file: "Temperance.jpeg" },
-            { id: 14, name: "The Devil", file: "Devil.jpeg" },
-            { id: 15, name: "The Tower", file: "Tower.jpeg" },
-            { id: 16, name: "The Star", file: "Star.jpeg" },
-            { id: 17, name: "The Moon", file: "Moon.jpeg" },
-            { id: 18, name: "The Sun", file: "The Sun.jpeg" },
-            { id: 19, name: "Judgement", file: "Judgement.jpeg" },
-            { id: 20, name: "The World", file: "World.jpeg" },
-            { id: 21, name: "The Siren", file: "The Siren.jpeg" },
-            { id: 22, name: "Ace Of Cups", file: "Ace Of Cups.jpeg" },
-            { id: 23, name: "10 Of Cups", file: "10 Of Cups.jpeg" },
-            { id: 24, name: "Ace Of Wands", file: "Ace Of Wands.jpeg" },
-            { id: 25, name: "Ace Of Swords", file: "Ace Of Swords.jpeg" },
-            { id: 26, name: "Ace Of pentacles", file: "Ace Of pentacles.jpeg" },
-            { id: 27, name: "8 of Swords", file: "8Of Swords.jpeg" },
-            { id: 28, name: "Knight Of Swords", file: "Knnight Of Swords.jpeg" },
-            { id: 29, name: "Page of pentacles", file: "Page of pentacles.jpeg" },
-            { id: 30, name: "10 Of Pentacles", file: "10 Of Pentacles.jpeg" },
-            { id: 31, name: "10 Of Wands", file: "10 Of Wands.jpeg" },
-            { id: 32, name: "2 Of Cups", file: "2 Of Cups.jpeg" },
-            { id: 33, name: "2 Of Pentacles", file: "2 Of Pentacles.jpeg" },
-            { id: 34, name: "2 Of Wands", file: "2 Of Wands.jpeg" },
-            { id: 35, name: "3 Of Cups", file: "3 Of Cups.jpeg" },
-            { id: 36, name: "3 Of Pentacles", file: "3 Of Pentacles.jpeg" },
-            { id: 37, name: "3 Of Wands", file: "3 Of Wands.jpeg" },
-            { id: 38, name: "4 Of Cups", file: "4 Of Cups.jpeg" },
-            { id: 39, name: "4 Of Pentacles", file: "4 Of Pentacles.jpeg" },
-            { id: 40, name: "4 Of Wands", file: "4 Of Wands.jpeg" },
-            { id: 41, name: "5 Of Cups", file: "5 Of Cups.jpeg" },
-            { id: 42, name: "5 Of Pentacles", file: "5 Of Pentacles.jpeg" },
-            { id: 43, name: "5 Of Wands", file: "5 Of Wands.jpeg" },
-            { id: 44, name: "6 Of Cups", file: "6 Of Cups.jpeg" },
-            { id: 45, name: "6 Of Pentacles", file: "6 Of Pentacles.jpeg" },
-            { id: 46, name: "6 Of Wands", file: "6 Of Wands.jpeg" },
-            { id: 47, name: "7 Of Cups", file: "7 Of Cups.jpeg" },
-            { id: 48, name: "7 Of Pentacles", file: "7 Of Pentacles.jpeg" },
-            { id: 49, name: "7 Of Wands", file: "7 Of Wands.jpeg" },
-            { id: 50, name: "8 Of Cups", file: "8 Of Cups.jpeg" },
-            { id: 51, name: "8 Of Pentacles", file: "8 Of Pentacles.jpeg" },
-            { id: 52, name: "8 Of Wands", file: "8 Of Wands.jpeg" },
-            { id: 53, name: "9 Of Cups", file: "9 Of Cups.jpeg" },
-            { id: 54, name: "9 Of Pentacles", file: "9 Of Pentacles.jpeg" },
-            { id: 55, name: "9 Of Wands", file: "9 Of Wands.jpeg" },
-            { id: 56, name: "King Of Cups", file: "King Of Cups.jpeg" },
-            { id: 57, name: "King Of Pentacles", file: "King Of Pentacles.jpeg" },
-            { id: 58, name: "King Of Swords", file: "King Of Swords.jpeg" },
-            { id: 59, name: "King Of Wands", file: "King Of Wands.jpeg" },
-            { id: 60, name: "Knight Of Cups", file: "Knight Of Cups.jpeg" },
-            { id: 61, name: "Knight Of Pentacles", file: "Knight Of Pentacles.jpeg" },
-            { id: 62, name: "Knight Of Wands", file: "Knight Of Wands.jpeg" },
-            { id: 63, name: "Page Of Cups", file: "Page Of Cups.jpeg" },
-            { id: 64, name: "Page Of Swords", file: "Page Of Swords.jpeg" },
-            { id: 65, name: "Page Of Wands", file: "Page Of Wands.jpeg" },
-            { id: 66, name: "Queen Of Cups", file: "Queen Of Cups.jpeg" },
-            { id: 67, name: "Queen Of Pentacles", file: "Queen Of Pentacles.jpeg" },
-            { id: 68, name: "Queen Of Swords", file: "Queen Of Swords.jpeg" },
-            { id: 69, name: "Queen Of Wands", file: "Queen Of Wands.jpeg" },
-            { id: 70, name: "Seven Of Swords", file: "Seven Of Swords.jpeg" },
-            { id: 71, name: "Six Of Swords", file: "Six Of Swords.jpeg" },
-            { id: 72, name: "Ten Of Swords", file: "Ten Of Swords.jpeg" },
-            { id: 73, name: "Two Of Swords", file: "Two Of Swords.jpeg" },
-            { id: 74, name: "Three Of Swords", file: "Three Of Swords.jpeg" },
-            { id: 75, name: "Four Of Swords", file: "Four Of Swords.jpeg" },
-            { id: 76, name: "Five Of Swords", file: "Five Of Swords.jpeg" },
-            { id: 77, name: "Nine Of Swords", file: "Nine Of Swords.jpeg" }
+            { id: 0, name: "The Fool", file: "The Fool.jpeg", kw: "Leap, Origins, Innocence", d: "A call to take the step that terrifies you. The universe supports your stride." },
+            { id: 1, name: "The High Priestess", file: "The High Priestess.jpeg", kw: "Intuition, Mystery, Silence", d: "The answers reside in the spaces between breaths. Listen to the silence." },
+            { id: 2, name: "The Empress", file: "The Empress.jpeg", kw: "Abundance, Nurture, Creation", d: "Nature is at its peak. Your ideas are fertile and ready to bloom." },
+            { id: 3, name: "The Emperor", file: "Emperor.jpeg", kw: "Authority, Structure, Power", d: "Build a fortress of discipline around your dreams. Leadership requires clear vision." },
+            { id: 4, name: "The Hierophant", file: "Heirophant.jpeg", kw: "Tradition, Guidance, Belief", d: "Seek the wisdom of the ages. There is comfort in ritual and shared values." },
+            { id: 5, name: "The Lovers", file: "The Lovers.jpeg", kw: "Union, Choice, Alignment", d: "Magnetism of opposites. A crossroads where the heart and soul must agree." },
+            { id: 6, name: "The Chariot", file: "The Chariot.jpeg", kw: "Victory, Control, Will", d: "Two forces pull at your reins. Mastery is keeping them headed toward the horizon." },
+            { id: 7, name: "Strength", file: "Strength.jpeg", kw: "Courage, Soft Power, Grace", d: "True strength is the lion lying down for the lamb. Tame your inner chaos." },
+            { id: 8, name: "The Hermit", file: "The Hermit.jpeg", kw: "Solitude, Truth, Lantern", d: "Withdraw from the noise. Your own internal lantern is the only light you need." },
+            { id: 9, name: "Wheel of Fortune", file: "Wheel Of Fortune.jpeg", kw: "Cycles, Fate, Turning Point", d: "The only constant is change. Ride the wheel as it turns." },
+            { id: 10, name: "Justice", file: "Justice.jpeg", kw: "Balance, Truth, Clarity", d: "The scales demand honesty. Every action ripples outward; ensure yours are clear." },
+            { id: 11, name: "Hanged Man", file: "Hanged Man.jpeg", kw: "Perspective, Pause, Surrender", d: "Sacrifice the old view to see the world anew. In stillness, movement happens." },
+            { id: 12, name: "Death", file: "Death.jpeg", kw: "Endings, Transformation, Rebirth", d: "The clearing of the garden. Do not fear the harvest; it makes room for tomorrow." },
+            { id: 13, name: "Temperance", file: "Temperance.jpeg", kw: "Alchemy, Balance, Healing", d: "The blending of fire and water. Healing is found in the middle path." },
+            { id: 14, name: "The Devil", file: "Devil.jpeg", kw: "Bondage, Attachment, Instinct", d: "The chains are loose, yet you remain. Acknowledge your shadows." },
+            { id: 15, name: "The Tower", file: "Tower.jpeg", kw: "Upheaval, Revelation, Change", d: "The lightning strikes what was never solid. Let it fall so truth can breathe." },
+            { id: 16, name: "The Star", file: "Star.jpeg", kw: "Hope, Healing, Inspiration", d: "Peace returns to the waters. You are guided by the light that never flickers." },
+            { id: 17, name: "The Moon", file: "Moon.jpeg", kw: "Illusion, Fear, Dreams", d: "Navigate the mist. Not everything is as it seems in the silver light." },
+            { id: 18, name: "The Sun", file: "The Sun.jpeg", kw: "Success, Vitality, Radiance", d: "Everything is illuminated. The shadows flee before your warmth and clarity." },
+            { id: 19, name: "Judgement", file: "Judgement.jpeg", kw: "Awakening, Renewal, Call", d: "The call to rise. Forgive the past and step into your truest self." },
+            { id: 20, name: "The World", file: "World.jpeg", kw: "Wholeness, Mastery, Travel", d: "The cycle is complete. You have arrived at the center of your own universe." },
+            { id: 21, name: "The Siren", file: "The Siren.jpeg", kw: "Seduction, Depth, Danger", d: "Beware the call that leads to the deep. It is beautiful, but terminal." },
+            { id: 22, name: "Ace Of Cups", file: "Ace Of Cups.jpeg", kw: "Love, Overflow, Feelings", d: "A chalice offered by the divine. Your soul is ready for new, wild feelings." },
+            { id: 23, name: "10 Of Cups", file: "10 Of Cups.jpeg", kw: "Harmony, Bliss, Home", d: "The ultimate peak of emotional satisfaction. You have found your harbor." },
+            { id: 24, name: "Ace Of Wands", file: "Ace Of Wands.jpeg", kw: "Spark, Drive, Inspiration", d: "A burst of creative fire. Run with the torch before the wind changes." },
+            { id: 25, name: "Ace Of Swords", file: "Ace Of Swords.jpeg", kw: "Clarity, Logic, Cut", d: "The blade cuts through the fog. A moment of absolute mental sharpness." },
+            { id: 26, name: "Ace Of pentacles", file: "Ace Of pentacles.jpeg", kw: "Seed, Wealth, Manifest", d: "A seed of physical manifestation. Plant it deep and watch it grow into gold." },
+            { id: 27, name: "8 of Swords", file: "8Of Swords.jpeg", kw: "Mind, Trap, Blindfold", d: "The swords surround you, but the path is open. The prison is in your head." },
+            { id: 28, name: "Knight Of Swords", file: "Knnight Of Swords.jpeg", kw: "Action, Rush, Intensity", d: "Charging forward. Speed is your ally, but do not lose your head." },
+            { id: 29, name: "Page of pentacles", file: "Page of pentacles.jpeg", kw: "Student, News, Earth", d: "A young apprentice of the earth. A message regarding your physical world arrives." },
+            { id: 30, name: "10 Of Pentacles", file: "10 Of Pentacles.jpeg", kw: "Legacy, Abundance, Roots", d: "Wealth that spans generations. A solid foundation is finally built." },
+            { id: 31, name: "10 Of Wands", file: "10 Of Wands.jpeg", kw: "Burden, Effort, Completion", d: "The final push. You are carrying the weight, but the finish line is near." }
         ];
 
-        async function fetchAIReading(cardName, position = "") {
-            const systemPrompt = `You are the Femme Fatale Tarot Oracle. You speak with creative, seductive, and original authority. 
-            ABSOLUTELY PROHIBITED WORDS: safeguarded, hall monitor, velvet, ghost, glitch, teeth, ruin, coffee, kitchen, table, sink, mug, jacket, chair, coat, static, shadow, shadows, tooth.
-            Do not use generic or plain language. Provide a reading that feels immersive and dark.
-            Format JSON only: {"keywords": "...", "reading": "..."}`;
+        // Automatically map remaining Minor Arcana files provided in list
+        const others = ["2 Of Cups.jpeg", "2 Of Pentacles.jpeg", "2 Of Wands.jpeg", "3 Of Cups.jpeg", "3 Of Pentacles.jpeg", "3 Of Wands.jpeg", "4 Of Cups.jpeg", "4 Of Pentacles.jpeg", "4 Of Wands.jpeg", "5 Of Cups.jpeg", "5 Of Pentacles.jpeg", "5 Of Wands.jpeg", "6 Of Cups.jpeg", "6 Of Pentacles.jpeg", "6 Of Wands.jpeg", "7 Of Cups.jpeg", "7 Of Pentacles.jpeg", "7 Of Wands.jpeg", "8 Of Cups.jpeg", "8 Of Pentacles.jpeg", "8 Of Wands.jpeg", "9 Of Cups.jpeg", "9 Of Pentacles.jpeg", "9 Of Wands.jpeg", "King Of Cups.jpeg", "King Of Pentacles.jpeg", "King Of Swords.jpeg", "King Of Wands.jpeg", "Knight Of Cups.jpeg", "Knight Of Pentacles.jpeg", "Knight Of Wands.jpeg", "Page Of Cups.jpeg", "Page Of Swords.jpeg", "Page Of Wands.jpeg", "Queen Of Cups.jpeg", "Queen Of Pentacles.jpeg", "Queen Of Swords.jpeg", "Queen Of Wands.jpeg", "Seven Of Swords.jpeg", "Six Of Swords.jpeg", "Ten Of Swords.jpeg", "Two Of Swords.jpeg", "Three Of Swords.jpeg", "Four Of Swords.jpeg", "Five Of Swords.jpeg", "Nine Of Swords.jpeg"];
+        
+        others.forEach((f, i) => {
+            if(!tarotData.find(c => c.file === f)) {
+                tarotData.push({ id: 100+i, name: f.replace('.jpeg',''), file: f, kw: "Fate, Flow, Journey", d: "The Oracle watches. The patterns of this card suggest a shift in your journey." });
+            }
+        });
 
-            const userPrompt = `A seeker has drawn ${cardName}${position ? ` for their ${position}` : ''}. Tell them what the cosmos reveals.`;
+        async function fetchAIReading(cardName) {
+            if (!apiKey) return null;
+            const system = `You are the Femme Fatale Tarot Oracle. Seductive, dark, creative. PROHIBITED: safeguarded, hall monitor, velvet, ghost, glitch, teeth, ruin, coffee, kitchen, table, sink, mug, jacket, chair, coat, static, shadow, shadows, tooth. JSON only: {"keywords": "...", "reading": "..."}`;
+            try {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ contents: [{parts: [{text: `Seeker drew ${cardName}`}]}], systemInstruction: {parts: [{text: system}]}, generationConfig: {responseMimeType: "application/json"} })
+                });
+                const data = await res.json();
+                return JSON.parse(data.candidates[0].content.parts[0].text);
+            } catch (e) { return null; }
+        }
 
-            let delay = 1000;
-            for (let i = 0; i < 5; i++) {
-                try {
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: userPrompt }] }],
-                            systemInstruction: { parts: [{ text: systemPrompt }] },
-                            generationConfig: { 
-                                responseMimeType: "application/json",
-                                responseSchema: {
-                                    type: "OBJECT",
-                                    properties: {
-                                        keywords: { type: "STRING" },
-                                        reading: { type: "STRING" }
-                                    },
-                                    required: ["keywords", "reading"]
-                                }
-                            }
-                        })
-                    });
-                    
-                    if (!response.ok) throw new Error('Network Error');
-                    const data = await response.json();
-                    return JSON.parse(data.candidates[0].content.parts[0].text);
-                } catch (e) {
-                    if (i === 4) throw e;
-                    await new Promise(r => setTimeout(r, delay));
-                    delay *= 2;
+        const grid = document.getElementById('deck-grid');
+        const modal = document.getElementById('reading-modal');
+
+        function createCardUI(data) {
+            const el = document.createElement('div');
+            el.className = 'card-container';
+            el.innerHTML = `
+                <div class="card-inner" onclick="flipCard(this, ${data.id})">
+                    <div class="card-back"><img src="BackDesign.png" onerror="this.src='Femme Fatale Design.png'"></div>
+                    <div class="card-front"><img src="${data.file}" onerror="this.src='Femme Fatale Design.png'"></div>
+                </div>
+            `;
+            return el;
+        }
+
+        function flipCard(el, id) {
+            const parent = el.parentElement;
+            if(!parent.classList.contains('flipped')) {
+                parent.classList.add('flipped');
+                setTimeout(() => showDetails(id), 600);
+            } else { showDetails(id); }
+        }
+
+        async function showDetails(id) {
+            const card = tarotData.find(c => c.id === id);
+            document.getElementById('modal-title').innerText = card.name;
+            document.getElementById('modal-image').src = card.file;
+            document.getElementById('modal-keywords').innerText = card.kw;
+            document.getElementById('modal-desc').innerText = card.d;
+            modal.classList.remove('hidden');
+
+            if(apiKey) {
+                const ai = await fetchAIReading(card.name);
+                if(ai) {
+                    document.getElementById('modal-keywords').innerText = ai.keywords;
+                    document.getElementById('modal-desc').innerText = ai.reading;
                 }
             }
         }
 
-        const container = document.getElementById('spread-container');
-        const modal = document.getElementById('card-modal');
-        const modalContent = document.getElementById('modal-content');
+        function closeModal() { modal.classList.add('hidden'); }
+        function closeModalOnOuter(e) { if(e.target === modal) closeModal(); }
 
-        function createCard(cardData, label) {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-700';
-            wrapper.innerHTML = `
-                ${label ? `<span class="reading-label text-gold text-xs uppercase tracking-[0.3em] font-black opacity-60 mb-2">${label}</span>` : ''}
-                <div class="card-container" onclick="handleFlip(this, ${cardData.id}, '${label || ''}')">
-                    <div class="card-inner">
-                        <div class="card-back">
-                            <img src="BackDesign.png" alt="Card Back" onerror="this.src='Femme Fatale Design.png'">
-                        </div>
-                        <div class="card-front">
-                            <img src="${cardData.file}" alt="${cardData.name}" onerror="this.src='Femme Fatale Design.png'">
-                        </div>
-                    </div>
-                </div>
-            `;
-            return wrapper;
+        function drawCard() {
+            resetDeck();
+            const rand = tarotData[Math.floor(Math.random() * tarotData.length)];
+            const ui = createCardUI(rand);
+            grid.appendChild(ui);
+            setTimeout(() => {
+                ui.classList.add('flipped');
+                setTimeout(() => showDetails(rand.id), 600);
+            }, 100);
         }
 
-        function drawSpread(type) {
-            clearSpread();
-            const shuffled = [...tarotData].sort(() => 0.5 - Math.random());
-            if (type === 'daily') {
-                container.appendChild(createCard(shuffled[0]));
-            } else {
-                ['Past', 'Present', 'Future'].forEach((label, i) => {
-                    setTimeout(() => container.appendChild(createCard(shuffled[i], label)), i * 200);
-                });
-            }
+        function resetDeck() {
+            grid.innerHTML = '';
+            tarotData.slice(0, 12).forEach(c => grid.appendChild(createCardUI(c)));
         }
 
-        async function handleFlip(el, id, position) {
-            if (el.classList.contains('flipped')) {
-                showModal(id, position);
-                return;
-            }
-            el.classList.add('flipped');
-            setTimeout(() => showModal(id, position), 800);
-        }
-
-        async function showModal(id, position) {
-            const card = tarotData.find(c => c.id === id);
-            document.getElementById('modal-title').innerText = card.name;
-            document.getElementById('modal-image').src = card.file;
-            
-            modal.classList.add('active');
-            modalContent.classList.remove('scale-95');
-
-            document.getElementById('reading-text').classList.add('hidden');
-            document.getElementById('api-loading').classList.remove('hidden');
-
-            try {
-                const result = await fetchAIReading(card.name, position);
-                document.getElementById('modal-keywords').innerText = result.keywords;
-                document.getElementById('modal-desc').innerText = result.reading;
-                document.getElementById('api-loading').classList.add('hidden');
-                document.getElementById('reading-text').classList.remove('hidden');
-            } catch (err) {
-                document.getElementById('api-loading').innerHTML = `<p class="text-red-500 italic uppercase text-xs tracking-widest text-center">The veil is too thick. Check your connection.</p>`;
-            }
-        }
-
-        function closeModal() {
-            modalContent.classList.add('scale-95');
-            setTimeout(() => modal.classList.remove('active'), 200);
-        }
-
-        function closeModalOnOuter(e) { if (e.target === modal) closeModal(); }
-        function clearSpread() { container.innerHTML = ''; }
-
-        window.onload = () => drawSpread('daily');
+        window.onload = resetDeck;
     </script>
 </body>
 </html>
